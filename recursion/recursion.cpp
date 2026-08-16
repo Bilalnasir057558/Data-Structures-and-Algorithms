@@ -90,6 +90,57 @@ vector<int> reverseArray(vector<int> &arr) {
     return arr;
 }
 
+bool isAlphaNumeric(char c) {
+    if((c >= 'A' && c <= 'Z')
+    || (c >= 'a' && c <= 'z')
+    || (c >= '0' && c <= '9')) return true;
+    return false;
+}
+
+void toLower(char &c) {
+    if(c >= 'A' && c <= 'Z') c = c - 'A' + 'a';
+}
+
+bool validPalindrome(string s, int i) {
+
+    // O(n) both time and space complexity
+
+    // base case = when i (current index) go half of the string means we have done all the comparisons and we don't find any mismatch
+    // if(i >= s.length() / 2) return true;
+
+    // if corresponding elements do not match, return false;
+    // if(s[i] != s[s.length() - i - 1]) return false;
+
+    // if corresponding elements are same then we again recursively call the same function with next index
+    // return validPalindrome(s, i + 1);
+
+    // Optimized Approach which gives O(1) space complexity
+    int start = i;
+    int end = s.size() - 1;
+
+    while(start < end) {
+
+        // skip non alphanumeric from start to middle
+        while(start < end && !isAlphaNumeric(s[start])) {
+            start++;
+        }
+
+        // skip non alphanumeric from end  to middle
+        while(start < end && !isAlphaNumeric(s[end])) {
+            end--;
+        }
+
+        toLower(s[start]);
+        toLower(s[end]);
+        
+        if(s[start] != s[end]) return false;
+
+        start++;
+        end--;
+    }
+    return true;
+}
+
 int main() {
     int n;
     cin >> n;
@@ -102,11 +153,18 @@ int main() {
     
     // cout<< "Factorial = " << factorial(n) << endl;
 
-    vector<int> v = {9, 8, 7, 6, 5};
-    vector<int> ans = reverseArray(v);
+    // vector<int> v = {9, 8, 7, 6, 5};
+    // vector<int> ans = reverseArray(v);
 
-    for(auto el : ans) {
-        cout<< el << " ";
+    // for(auto el : ans) {
+    //     cout<< el << " ";
+    // }
+    // cout << endl;
+
+    string s = "A man, a plan, a canal: Panama";
+    if(validPalindrome(s, 0)) {
+        cout<< "Palindrome" << endl;
+    } else {
+        cout<< "Not a palindrome" << endl;
     }
-    cout << endl;
 }
