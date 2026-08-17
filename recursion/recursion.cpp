@@ -1,9 +1,11 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
- // T.C = O(n) S.C = O(n) -> stack space used in recursive calls
-void printName(int n) {
-    if(n == 0) {
+// T.C = O(n) S.C = O(n) -> stack space used in recursive calls
+void printName(int n)
+{
+    if (n == 0)
+    {
         return;
     }
     cout << "Bilal" << endl;
@@ -11,12 +13,14 @@ void printName(int n) {
 }
 
 // O(n)
-void printNumberInAsc(int i, int n) {
+void printNumberInAsc(int i, int n)
+{
     // Forward recursion
-    if(i > n) {
+    if (i > n)
+    {
         return;
     }
-    cout<< i << endl;
+    cout << i << endl;
     printNumberInAsc(i + 1, n);
 
     // Using Backtracking -> first all the call are sat on the stack until the base case is executed, then print from the last function call in reverse order
@@ -24,10 +28,12 @@ void printNumberInAsc(int i, int n) {
     // cout<< i << endl;
 }
 
-void printNumberInDesc(int i, int n) {
+void printNumberInDesc(int i, int n)
+{
 
     // Forward recursion
-    if(i < 1) {
+    if (i < 1)
+    {
         return;
     }
     // cout<< i << endl;
@@ -35,26 +41,31 @@ void printNumberInDesc(int i, int n) {
 
     // Backtracking
     printNumberInDesc(i - 1, n);
-    cout<< i << endl;
+    cout << i << endl;
 }
 
-int printSum(int n) {
-    if(n == 1) return 1;
+int printSum(int n)
+{
+    if (n == 1)
+        return 1;
     return n + printSum(n - 1);
 
     // Optimized way -> O(1)
     // return (n * (n + 1)) / 2;
-} 
+}
 
 // we divide the problem into smaller sub problems and all subproblems results are multiplied together as the function call returns
-int factorial(int n) {
-    if(n == 0) return 1; // factorial of 0 is 1
+int factorial(int n)
+{
+    if (n == 0)
+        return 1; // factorial of 0 is 1
     return n * factorial(n - 1);
 }
 
-vector<int> reverseArray(vector<int> &arr) {
+vector<int> reverseArray(vector<int> &arr)
+{
 
-    // Brute force 
+    // Brute force
     // O(n) -> loop runs n times
     // Space complexity O(n) -> extra vector space of size n is used
     // int n = arr.size();
@@ -73,7 +84,8 @@ vector<int> reverseArray(vector<int> &arr) {
     int start = 0;
     int end = arr.size() - 1;
 
-    while(start < end) {
+    while (start < end)
+    {
         swap(arr[start], arr[end]);
 
         // increment start
@@ -84,24 +96,27 @@ vector<int> reverseArray(vector<int> &arr) {
     }
     return arr;
 
-    // using stl reverse function 
+    // using stl reverse function
     reverse(arr.begin(), arr.end()); // it still uses two pointers approach internally therefore
     // complexity is O(n);
     return arr;
 }
 
-bool isAlphaNumeric(char c) {
-    if((c >= 'A' && c <= 'Z')
-    || (c >= 'a' && c <= 'z')
-    || (c >= '0' && c <= '9')) return true;
+bool isAlphaNumeric(char c)
+{
+    if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+        return true;
     return false;
 }
 
-void toLower(char &c) {
-    if(c >= 'A' && c <= 'Z') c = c - 'A' + 'a';
+void toLower(char &c)
+{
+    if (c >= 'A' && c <= 'Z')
+        c = c - 'A' + 'a';
 }
 
-bool validPalindrome(string s, int i) {
+bool validPalindrome(string s, int i)
+{
 
     // O(n) both time and space complexity
 
@@ -118,22 +133,26 @@ bool validPalindrome(string s, int i) {
     int start = i;
     int end = s.size() - 1;
 
-    while(start < end) {
+    while (start < end)
+    {
 
         // skip non alphanumeric from start to middle
-        while(start < end && !isAlphaNumeric(s[start])) {
+        while (start < end && !isAlphaNumeric(s[start]))
+        {
             start++;
         }
 
         // skip non alphanumeric from end  to middle
-        while(start < end && !isAlphaNumeric(s[end])) {
+        while (start < end && !isAlphaNumeric(s[end]))
+        {
             end--;
         }
 
         toLower(s[start]);
         toLower(s[end]);
-        
-        if(s[start] != s[end]) return false;
+
+        if (s[start] != s[end])
+            return false;
 
         start++;
         end--;
@@ -141,7 +160,35 @@ bool validPalindrome(string s, int i) {
     return true;
 }
 
-int main() {
+int fib(int n)
+{
+
+    // Better Approach -> loop runs n - 1 times and does constant operations in each iteration
+    // O(n) and space complexity -> O(1)
+    if (n <= 1)
+    {
+        return n;
+    };
+
+    int secondLast = 0;
+    int last = 1;
+
+    int curr;
+    for (int i = 2; i <= n; i++)
+    {
+        curr = secondLast + last;
+        secondLast = last;
+        last = curr;
+    }
+    return curr;
+
+    // recursive approach O(2^n) and space complexity is O(n)
+    // if(n <= 1) return n;
+    // return fib(n - 1) + fib(n - 2);
+}
+
+int main()
+{
     int n;
     cin >> n;
     // printName(n);
@@ -150,7 +197,7 @@ int main() {
     // printNumberInDesc(i, n);
 
     // cout<< "Sum = " << printSum(n) << endl;
-    
+
     // cout<< "Factorial = " << factorial(n) << endl;
 
     // vector<int> v = {9, 8, 7, 6, 5};
@@ -162,9 +209,12 @@ int main() {
     // cout << endl;
 
     string s = "A man, a plan, a canal: Panama";
-    if(validPalindrome(s, 0)) {
-        cout<< "Palindrome" << endl;
-    } else {
-        cout<< "Not a palindrome" << endl;
+    if (validPalindrome(s, 0))
+    {
+        cout << "Palindrome" << endl;
+    }
+    else
+    {
+        cout << "Not a palindrome" << endl;
     }
 }
