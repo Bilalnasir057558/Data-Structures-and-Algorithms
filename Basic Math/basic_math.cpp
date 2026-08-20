@@ -148,6 +148,31 @@ void GCD(int n1, int n2) {
     cout<< gcd << endl;
 }
 
+void testGCD(int n1, int n2) {
+    while(n1 != 0 && n2 != 0) {
+        if(n2 < n1) n1 = n1 % n2;
+        else n2 = n2 % n1; 
+    }
+    if(n1 == 0) cout<< n2 << " is GCD" <<endl;
+    else cout << n1 << " is GCD" << endl;
+}
+
+void testSumAndPalindrome(int n) {
+    int sum = 0;
+    int reversed = 0;
+    int x = n;
+    while(x != 0) {
+        int digit = x % 10;
+        x /= 10;
+        sum += digit;
+        reversed = (reversed * 10) + digit;
+    }
+    if(n == reversed) cout<< "Palindrome" << endl;
+    else cout<< "Not a palindrome" << endl;
+
+    cout<< "Sum of digits = " << sum << endl;
+}
+
 int main()
 {
     // int n;

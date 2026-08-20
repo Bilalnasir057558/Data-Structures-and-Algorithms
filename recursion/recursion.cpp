@@ -187,6 +187,21 @@ int fib(int n)
     // return fib(n - 1) + fib(n - 2);
 }
 
+
+vector<int> testReverse(vector<int> &nums, int start, int end) {
+    if(start >= end) return nums;
+    swap(nums[start], nums[end]);
+    start++;
+    end--;
+    return testReverse(nums, start, end);
+}
+
+bool testIsNotDecreasing(vector<int> nums, int i = 0) {
+    if(i >= nums.size() - 1) return true; // all elements are checked
+    if(nums[i] > nums[i+1]) return false;
+    return testIsNotDecreasing(nums, i+1);
+}
+
 int main()
 {
     int n;
