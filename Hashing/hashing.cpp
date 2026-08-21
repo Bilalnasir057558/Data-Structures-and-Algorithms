@@ -51,6 +51,69 @@ vector<vector<int>> countFrequencies(vector<int>& nums) {
 }
 
 
+int testMaxOccurrence(vector<int> nums) {
+    unordered_map<int, int> mp;
+    for(int i = 0; i < nums.size(); i++) {
+        mp[nums[i]]++;
+    };
+
+    int maxCount = 0;
+    int maxElement = nums[0];
+    for(auto el : mp) {
+        if(el.second > maxCount) {
+            maxCount = el.second;
+            maxElement = el.first;
+        }
+    }
+
+    return maxElement;
+}
+
+void testSumToTarget(vector<int> nums, int target) {
+
+    // Brute Force
+    // for(int i = 0; i < nums.size() - 1; i++) {
+    //     for(int j = i + 1; j < nums.size(); j++) {
+    //         if(nums[i] + nums[j] == target) {
+    //             cout<< nums[i] << " " << nums[j];
+    //         }
+    //     }
+    // }
+
+}
+
+void testCharFrequency(string s) {
+
+    unordered_map<char, int> mp;
+    for(int i = 0; i < s.size(); i++) {
+        mp[s[i]]++;
+    };
+
+    // map does'nt preserve order, iteration order depends upon hashing order
+    // In order to find first unique char in a string, we can't iterate over the map, iterate string order
+    for(auto el : s) {
+        if(mp[el] == 1) {
+            cout<< el << endl;
+            break;
+        }
+    }
+}
+
+void twoSumHashSet(vector<int> nums, int target) {
+
+    // in worst case it can hold upto n elements O(n) space complexity    
+    unordered_set<int> seen;
+
+    // takes O(n)
+    for(int i = 0; i < nums.size(); i++) {
+        int complement = target - nums[i];
+        if(seen.count(complement)) {
+            cout<< complement << " " << nums[i] << endl;
+        }
+        seen.insert(nums[i]);
+    }
+}
+
 int main() {
 
     // Number hashing

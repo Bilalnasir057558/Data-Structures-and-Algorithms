@@ -178,6 +178,15 @@ bool comp(pair<int, int> p1, pair<int, int> p2) {
     return false;
 }
 
+bool testSort(pair<int, int> p1, pair<int, int> p2) {
+    if(p1.second > p2.second) return true;
+    if(p1.second < p2.second) return false;
+
+    // 2nd element equal
+    if(p1.first < p2.first) return true;
+    return false;
+}
+
 void algorithms() {
     vector<int> v = {4, 5, 2, 1};
     // sort(v.begin(), v.end());
@@ -214,6 +223,15 @@ int main() {
     // stacks();
     // sets();
     // maps();
-    algorithms();
+    // algorithms();
+
+    vector<pair<int, int>> v = {
+        {1, 8}, 
+        {4, 2},
+        {3, 9}
+    };
+
+    sort(v.begin(), v.end(), testSort);
+
     return 0;
 }

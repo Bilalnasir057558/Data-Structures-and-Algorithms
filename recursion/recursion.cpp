@@ -202,6 +202,28 @@ bool testIsNotDecreasing(vector<int> nums, int i = 0) {
     return testIsNotDecreasing(nums, i+1);
 }
 
+void generateSubsequences(int idx, vector<int>& nums, vector<int>& current) {
+    if(idx >= nums.size()) { // base case
+        // print current subset
+        for(int x : current) {
+            cout<< x << " ";
+        }
+        cout<< (current.empty() ? "{}" : " ") << endl;
+        return;
+    }
+
+    // choice 1: take the number
+    current.push_back(nums[idx]);
+    // move to the next idx
+    generateSubsequences(idx + 1, nums, current);
+
+    // backtrack - undo the choice to explore other elements which does not include that element
+    current.pop_back();
+
+    // choice 2: skip the number
+    generateSubsequences(idx + 1, nums, current);
+}
+
 int main()
 {
     int n;
@@ -223,13 +245,19 @@ int main()
     // }
     // cout << endl;
 
-    string s = "A man, a plan, a canal: Panama";
-    if (validPalindrome(s, 0))
-    {
-        cout << "Palindrome" << endl;
-    }
-    else
-    {
-        cout << "Not a palindrome" << endl;
-    }
+    // string s = "A man, a plan, a canal: Panama";
+    // if (validPalindrome(s, 0))
+    // {
+    //     cout << "Palindrome" << endl;
+    // }
+    // else
+    // {
+    //     cout << "Not a palindrome" << endl;
+    // }
+
+
+    vector<int> v = {1, 2, 3};
+    vector<int> current = {};
+    generateSubsequences(0, v, current);
+    return 0;
 }
