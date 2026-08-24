@@ -28,10 +28,46 @@ void selectionSort(vector<int>& nums) {
     }
 }
 
+void bubbleSort(vector<int>& nums) {
+
+    // Brute Force
+    // Time Complexity is O(n^2)
+    // Outer loop runs n times
+    // for(int i = nums.size() - 1; i >= 0; i--) {
+
+    //     // inner loop runs i times
+    //     for(int j = 0; j <= i - 1; j++) {
+    //         if(nums[j] > nums[j+1]) {
+    //             swap(nums[j], nums[j+1]);
+    //         }
+    //     }
+    // };
+
+    // Optimal Approach
+    // for best case when already sorted -> outer loop runs only one time. if i = 4, inner loop runs 4 times and break after it
+    // Means total operations are n - 1 i.e 4 so time complexity in this case is reduced to O(n)
+    for(int i = nums.size() - 1; i >= 0; i--) {
+        bool didSwap = 0; 
+        // inner loop runs i times
+        for(int j = 0; j <= i - 1; j++) {
+            if(nums[j] > nums[j+1]) {
+                swap(nums[j], nums[j+1]);
+                didSwap = 1;
+            }
+        }
+
+        // If the array is already sorted no swap will occur and we will break out from the loop
+        if(!didSwap) {
+            break;
+        }
+    };
+}
+
 int main() {
 
     vector<int> v = {5, 4, 3, 2, 1};
-    selectionSort(v);
+    // selectionSort(v);
+    bubbleSort(v);
 
     for(auto el : v) {
         cout<< el << " ";
