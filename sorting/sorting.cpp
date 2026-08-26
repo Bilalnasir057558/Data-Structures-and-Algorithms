@@ -81,12 +81,61 @@ void insertionSort(vector<int>& nums) {
     }
 }
 
+void merge(vector<int>& nums, int start, int mid, int end) {
+    int left = start;
+    int right = mid + 1;
+    vector<int> temp;
+
+    while(left <= mid && right <= end) {
+        if(nums[left] <= nums[right]) {
+            temp.push_back(nums[left++]);
+        } else {
+            temp.push_back(nums[right++]);
+        }
+    };
+
+    // copy remaining elements of the left half
+    while(left <= mid) {
+        temp.push_back(nums[left++]);
+    };
+
+    // copy remaining elements of the right half
+    while(right <= end) {
+        temp.push_back(nums[right++]);
+    }
+
+    // copy temp vector to the original array
+    for(int i = 0; i < temp.size(); i++) {
+        nums[i + start] = temp[i];
+    }
+}
+
+void mergeSort(vector<int>& nums, int start, int end) {
+    if(start >= end) {
+        return;
+    }
+
+    int mid = (start + end) / 2;
+
+    // Apply mergeSort on left half
+    mergeSort(nums, start, mid);
+
+    // Apply mergeSort on right half
+    mergeSort(nums, mid + 1, end);
+
+    // merge
+    merge(nums, start, mid, end);
+
+}
+
 int main() {
 
     vector<int> v = {5, 4, 3, 2, 1};
     // selectionSort(v);
     // bubbleSort(v);
-    insertionSort(v);
+    // insertionSort(v);
+
+    mergeSort(v, 0, v.size() - 1);
 
     for(auto el : v) {
         cout<< el << " ";
