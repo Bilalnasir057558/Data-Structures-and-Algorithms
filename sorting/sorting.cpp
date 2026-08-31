@@ -128,14 +128,51 @@ void mergeSort(vector<int>& nums, int start, int end) {
 
 }
 
+int partition(vector<int>& nums, int st, int end) {
+    int pivot = nums[st];
+    int i = st;
+    int j = end;
+
+
+    // partition logic -> moving smaller elements on left and larger on right
+    while(i < j) {
+        while(nums[i] <= pivot && i <= end - 1) {
+            i++;
+        }
+        while(nums[j] > pivot && j >= st + 1) {
+            j--;
+        }
+        
+        // swapping only if pointers donot cross each other
+        if(i < j) {
+            swap(nums[i], nums[j]);
+        }   
+    }
+
+    // move the pivot at its correct place i.e. j (the last index of smaller elements)
+    swap(nums[st], nums[j]);
+    return j;
+}
+
+void quickSort(vector<int>& nums, int st, int end) {
+    if(st >= end) return;
+
+    int pivotIndex = partition(nums, st, end);
+
+    quickSort(nums, st, pivotIndex - 1);
+
+    quickSort(nums, pivotIndex + 1, end);
+}
+
 int main() {
 
-    vector<int> v = {5, 4, 3, 2, 1};
+    vector<int> v = {4, 6, 2, 5, 7, 9, 1, 3};
     // selectionSort(v);
     // bubbleSort(v);
     // insertionSort(v);
 
-    mergeSort(v, 0, v.size() - 1);
+    // mergeSort(v, 0, v.size() - 1);
+    quickSort(v, 0, v.size() - 1);
 
     for(auto el : v) {
         cout<< el << " ";
