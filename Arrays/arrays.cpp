@@ -114,14 +114,78 @@ int removeDuplicates(vector<int> &nums)
     // return s.size();
 
     int i = 0;
-    for(int j = 1; j < nums.size(); j++) {
-        if(nums[j] > nums[i]) { // we found a new unique
+    for (int j = 1; j < nums.size(); j++)
+    {
+        if (nums[j] > nums[i])
+        {                          // we found a new unique
             nums[i + 1] = nums[j]; // place it next to our current unique
             i++;
         }
     }
     return i + 1;
 }
+
+void rotateArrayByOne(vector<int>& nums) {
+        int first = nums[0];
+        for(int i = 1; i < nums.size(); i++) {
+            nums[i - 1] = nums[i];
+        }
+        nums[nums.size() - 1] = first;
+}
+
+void rotateArrayLeftByK(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = k % n;
+
+        // Brute Force
+        vector<int> temp(k);
+
+        for(int i = 0; i < k; i++) {
+            temp[i] = nums[i];
+        }
+
+        for(int i = k; i < n; i++) {
+            nums[i - k] = nums[i];
+        };
+
+        for(int i = 0; i < k; i++) {
+            nums[n - k + i] = temp[i];
+        }
+
+        // Optimal Solution
+        // reverse(nums.begin(), nums.begin() + k);
+        // reverse(nums.begin() + k, nums.end());
+        // reverse(nums.begin(), nums.end());
+}
+
+void rotateArrayRightByK(vector<int>& nums, int k) {
+        int n = nums.size();
+        k = k % n;
+
+        // Brute Force
+        // vector<int> temp(k);
+
+        // // store last k elements in a temporary vector
+        // for(int i = n - k; i < n; i++) {
+        //     temp[i - n + k] = nums[i];
+        // }
+
+        // // shifting n - k elements to the right
+        // for(int i = n - k - 1; i >= 0; i--) {
+        //     nums[i + k] = nums[i]; // moving k times forward
+        // };
+
+        // // copying last k elements at the front of the array
+        // for(int i = 0; i < k; i++) {
+        //     nums[i] = temp[i];
+        // }
+
+        // Optimal Solution
+        reverse(nums.begin(), nums.end() - k);
+        reverse(nums.end() - k, nums.end());
+        reverse(nums.begin(), nums.end());
+}
+
 
 int main()
 {
@@ -139,6 +203,16 @@ int main()
     //     cout << "Not Sorted" << endl;
     // }
 
-    cout << "Length are removing duplicates = " << removeDuplicates(v) << endl;
+    // cout << "Length are removing duplicates = " << removeDuplicates(v) << endl;
+
+    // rotateArrayByOne(v);
+
+    // rotateArrayLeftByK(v, 3);
+
+    rotateArrayRightByK(v, 3);
+    for(auto el : v) {
+        cout<< el << " ";
+    }
+    cout << '\n';
     return 0;
 }
