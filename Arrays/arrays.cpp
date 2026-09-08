@@ -80,12 +80,22 @@ int secondLargestElement(vector<int> &nums)
 
 bool isSorted(vector<int> &nums)
 {
+
+    // Brute Force
+    // O(n^2)
+    // for(int i = 0; i < nums.size() - 1; i++) {
+    //     for(int j = i + 1; j < nums.size(); j++) {
+    //         if(nums[j] > nums[i]) return false;
+    //     }
+    // }
+
+    // return true;
+
     // Optimal Approach
     // T.C = O(n), S.C = O(1)
     int n = nums.size();
     for (int i = 1; i < n; i++)
     {
-
         // if previous element is greater than the next element, means they are not in ascending order
         if (nums[i - 1] > nums[i])
             return false;
@@ -93,17 +103,42 @@ bool isSorted(vector<int> &nums)
     return true;
 }
 
+int removeDuplicates(vector<int> &nums)
+{
+    // set<int> s;
+    // for (int i = 0; i < nums.size(); i++)
+    // {
+    //     s.insert(nums[i]);
+    // }
+
+    // return s.size();
+
+    int i = 0;
+    for(int j = 1; j < nums.size(); j++) {
+        if(nums[j] > nums[i]) { // we found a new unique
+            nums[i + 1] = nums[j]; // place it next to our current unique
+            i++;
+        }
+    }
+    return i + 1;
+}
+
 int main()
 {
-    vector<int> v = {10, 50, 30, 40, 50};
+    vector<int> v = {-30, -30, 0, 0, 10, 20, 30, 30};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
 
-    if(isSorted(v)) {
-        cout<< "Sorted" << endl;
-    } else {
-        cout<< "Not Sorted" << endl;
-    }
+    // if (isSorted(v))
+    // {
+    //     cout << "Sorted" << endl;
+    // }
+    // else
+    // {
+    //     cout << "Not Sorted" << endl;
+    // }
+
+    cout << "Length are removing duplicates = " << removeDuplicates(v) << endl;
     return 0;
 }
