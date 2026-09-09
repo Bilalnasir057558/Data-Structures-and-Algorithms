@@ -25,7 +25,7 @@ vector<vector<int>> countFrequencies(vector<int>& nums) {
         //     }
         // }
 
-        // // T.C = O(N) + O(N) + O(N) -> O(N + M)
+        // // T.C = O(N) + O(N) + O(M) -> O(N + M)
         // // S.C = O(N + M)
         // return ans;
 

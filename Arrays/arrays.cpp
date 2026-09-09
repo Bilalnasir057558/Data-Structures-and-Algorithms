@@ -186,10 +186,39 @@ void rotateArrayRightByK(vector<int>& nums, int k) {
         reverse(nums.begin(), nums.end());
 }
 
+void moveZeroes(vector<int>& nums) {
+
+    // Brute Force 1 -> T.C = O(n^2) 
+    // int count = 0;
+    // for(int i = 0; i < nums.size(); i++) {
+    //     if(nums[i] == 0) {
+    //         count++;
+    //         for(int j = i + 1; j < nums.size(); j++) {
+    //             nums[j - 1] = nums[j];
+    //         }
+    //         i--;
+    //     }
+    // }
+
+    // for(int i = nums.size() - count; i < nums.size(); i++) {
+    //     nums[i] = 0;
+    // }
+
+    // Brute Force 2
+    vector<int> temp(nums.size());
+    int idx = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        if(nums[i] != 0) {
+            temp[idx] = nums[i];
+            idx++;
+        }
+    }
+    nums = temp;
+}
 
 int main()
 {
-    vector<int> v = {-30, -30, 0, 0, 10, 20, 30, 30};
+    vector<int> v = {0, 0, 0, 3, 12};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -209,7 +238,10 @@ int main()
 
     // rotateArrayLeftByK(v, 3);
 
-    rotateArrayRightByK(v, 3);
+    // rotateArrayRightByK(v, 3);
+
+    moveZeroes(v);
+
     for(auto el : v) {
         cout<< el << " ";
     }

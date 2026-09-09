@@ -97,9 +97,9 @@ vector<int> reverseArray(vector<int> &arr)
     return arr;
 
     // using stl reverse function
-    reverse(arr.begin(), arr.end()); // it still uses two pointers approach internally therefore
+    // reverse(arr.begin(), arr.end()); // it still uses two pointers approach internally therefore
     // complexity is O(n);
-    return arr;
+    // return arr;
 }
 
 bool isAlphaNumeric(char c)

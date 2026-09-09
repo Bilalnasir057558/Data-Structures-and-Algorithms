@@ -164,15 +164,53 @@ void quickSort(vector<int>& nums, int st, int end) {
     quickSort(nums, pivotIndex + 1, end);
 }
 
+void recursiveBubbleSort(vector<int>& nums, int n) {
+    if(n == 1) return;
+
+    bool didSwap = 0;
+
+    // runs exactly n - 1 times (O(n))
+    for(int j = 0; j < n - 1; j++) {
+        if(nums[j] > nums[j+1]) {
+            swap(nums[j], nums[j+1]);
+            didSwap = 1;
+        }
+    }
+
+    if(!didSwap) return;
+
+    // recursive function calls are made n times (O(n))
+    recursiveBubbleSort(nums, n - 1);
+
+}
+
+void recursiveInsertionSort(vector<int>&nums, int i, int n) {
+    if(i > n - 1) return;
+
+    int key = nums[i];
+    int j = i - 1;
+
+    while(j >= 0 && nums[j] > key) {
+        nums[j + 1] = nums[j];
+        j--;
+    }
+
+    nums[j + 1] = key;
+    recursiveInsertionSort(nums, i + 1, n);
+}
+
 int main() {
 
-    vector<int> v = {4, 6, 2, 5, 7, 9, 1, 3};
+    vector<int> v = {13, 46, 24, 52, 20};
     // selectionSort(v);
     // bubbleSort(v);
     // insertionSort(v);
 
     // mergeSort(v, 0, v.size() - 1);
-    quickSort(v, 0, v.size() - 1);
+    // quickSort(v, 0, v.size() - 1);
+
+    // recursiveBubbleSort(v, v.size());
+    recursiveInsertionSort(v, 1, v.size());
 
     for(auto el : v) {
         cout<< el << " ";
