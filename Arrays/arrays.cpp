@@ -125,70 +125,78 @@ int removeDuplicates(vector<int> &nums)
     return i + 1;
 }
 
-void rotateArrayByOne(vector<int>& nums) {
-        int first = nums[0];
-        for(int i = 1; i < nums.size(); i++) {
-            nums[i - 1] = nums[i];
-        }
-        nums[nums.size() - 1] = first;
+void rotateArrayByOne(vector<int> &nums)
+{
+    int first = nums[0];
+    for (int i = 1; i < nums.size(); i++)
+    {
+        nums[i - 1] = nums[i];
+    }
+    nums[nums.size() - 1] = first;
 }
 
-void rotateArrayLeftByK(vector<int>& nums, int k) {
-        int n = nums.size();
-        k = k % n;
+void rotateArrayLeftByK(vector<int> &nums, int k)
+{
+    int n = nums.size();
+    k = k % n;
 
-        // Brute Force
-        vector<int> temp(k);
+    // Brute Force
+    vector<int> temp(k);
 
-        for(int i = 0; i < k; i++) {
-            temp[i] = nums[i];
-        }
+    for (int i = 0; i < k; i++)
+    {
+        temp[i] = nums[i];
+    }
 
-        for(int i = k; i < n; i++) {
-            nums[i - k] = nums[i];
-        };
+    for (int i = k; i < n; i++)
+    {
+        nums[i - k] = nums[i];
+    };
 
-        for(int i = 0; i < k; i++) {
-            nums[n - k + i] = temp[i];
-        }
+    for (int i = 0; i < k; i++)
+    {
+        nums[n - k + i] = temp[i];
+    }
 
-        // Optimal Solution
-        // reverse(nums.begin(), nums.begin() + k);
-        // reverse(nums.begin() + k, nums.end());
-        // reverse(nums.begin(), nums.end());
+    // Optimal Solution
+    // reverse(nums.begin(), nums.begin() + k);
+    // reverse(nums.begin() + k, nums.end());
+    // reverse(nums.begin(), nums.end());
 }
 
-void rotateArrayRightByK(vector<int>& nums, int k) {
-        int n = nums.size();
-        k = k % n;
+void rotateArrayRightByK(vector<int> &nums, int k)
+{
+    int n = nums.size();
+    k = k % n;
 
-        // Brute Force
-        // vector<int> temp(k);
+    // Brute Force
+    // vector<int> temp(k);
 
-        // // store last k elements in a temporary vector
-        // for(int i = n - k; i < n; i++) {
-        //     temp[i - n + k] = nums[i];
-        // }
+    // // store last k elements in a temporary vector
+    // for(int i = n - k; i < n; i++) {
+    //     temp[i - n + k] = nums[i];
+    // }
 
-        // // shifting n - k elements to the right
-        // for(int i = n - k - 1; i >= 0; i--) {
-        //     nums[i + k] = nums[i]; // moving k times forward
-        // };
+    // // shifting n - k elements to the right
+    // for(int i = n - k - 1; i >= 0; i--) {
+    //     nums[i + k] = nums[i]; // moving k times forward
+    // };
 
-        // // copying last k elements at the front of the array
-        // for(int i = 0; i < k; i++) {
-        //     nums[i] = temp[i];
-        // }
+    // // copying last k elements at the front of the array
+    // for(int i = 0; i < k; i++) {
+    //     nums[i] = temp[i];
+    // }
 
-        // Optimal Solution
-        reverse(nums.begin(), nums.end() - k);
-        reverse(nums.end() - k, nums.end());
-        reverse(nums.begin(), nums.end());
+    // Optimal Solution
+    reverse(nums.begin(), nums.end() - k);
+    reverse(nums.end() - k, nums.end());
+    reverse(nums.begin(), nums.end());
 }
 
-void moveZeroes(vector<int>& nums) {
+void moveZeroes(vector<int> &nums)
+{
 
-    // Brute Force 1 -> T.C = O(n^2) 
+    // Brute Force 1 -> T.C = O(n^2)
     // int count = 0;
     // for(int i = 0; i < nums.size(); i++) {
     //     if(nums[i] == 0) {
@@ -204,16 +212,128 @@ void moveZeroes(vector<int>& nums) {
     //     nums[i] = 0;
     // }
 
-    // Brute Force 2
-    vector<int> temp(nums.size());
-    int idx = 0;
-    for(int i = 0; i < nums.size(); i++) {
-        if(nums[i] != 0) {
-            temp[idx] = nums[i];
-            idx++;
+    // Brute Force 2 -> T.C = O(n), S.C = O(n)
+    // vector<int> temp(nums.size());
+    // int idx = 0;
+    // for(int i = 0; i < nums.size(); i++) {
+    //     if(nums[i] != 0) {
+    //         temp[idx] = nums[i];
+    //         idx++;
+    //     }
+    // }
+    // nums = temp;
+
+    // Optimal Approach
+    int j = -1;
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] == 0)
+        {
+            j = i;
+            break;
         }
     }
-    nums = temp;
+
+    if (j == -1)
+        return;
+
+    for (int i = j + 1; i < nums.size(); i++)
+    {
+        if (nums[i] != 0)
+        {
+            swap(nums[i], nums[j]);
+            j++;
+        }
+    }
+}
+
+void addUnique(vector<int> &result, int el)
+{
+    if (result.empty() || result.back() != el)
+    {
+        result.push_back(el);
+    }
+}
+vector<int> unionArray(vector<int> &nums1, vector<int> &nums2)
+{
+
+    /*
+    // Brute Force Using Map
+    // T.C = O((m+n)log(m+n))
+    // S.C = O(m+n)
+    map<int, int> mp;
+    vector<int> ans;
+    for(int i = 0; i < nums1.size(); i++) {
+        mp[nums1[i]]++;
+    }
+
+    for(int j = 0; j < nums2.size(); j++) {
+        mp[nums2[j]]++;
+    }
+
+    for(auto &it : mp) {
+        ans.push_back(it.first);
+    }   
+
+    return ans;
+    */
+   
+    // Brute Force Using Set
+    // T.C = O((m+n)log(m+n))
+    // S.C = O(m+n)
+    set<int> st;
+    for(int i = 0; i < nums1.size(); i++) {
+        st.insert(nums1[i]);
+    }
+
+    for(int j = 0; j < nums2.size(); j++) {
+        st.insert(nums2[j]);
+    }
+
+    vector<int> ans(st.begin(), st.end());
+
+    return ans;
+
+    // Optimal Approach
+    /*
+    int i = 0;
+    int j = 0;
+    vector<int> result;
+    while (i < nums1.size() && j < nums2.size())
+    {
+        if (nums1[i] == nums2[j])
+        {
+            addUnique(result, nums1[i]);
+            i++;
+            j++;
+        }
+        else if (nums1[i] < nums2[j])
+        {
+            addUnique(result, nums1[i]);
+            i++;
+        }
+        else
+        {
+            addUnique(result, nums2[j]);
+            j++;
+        }
+    }
+
+    while (i < nums1.size())
+    {
+        addUnique(result, nums1[i]);
+        i++;
+    }
+
+    while (j < nums2.size())
+    {
+        addUnique(result, nums2[j]);
+        j++;
+    }
+
+    return result;
+    */
 }
 
 int main()
@@ -240,11 +360,21 @@ int main()
 
     // rotateArrayRightByK(v, 3);
 
-    moveZeroes(v);
+    // moveZeroes(v);
 
-    for(auto el : v) {
+    // for (auto el : v)
+    // {
+    //     cout << el << " ";
+    // }
+    // cout << '\n';
+
+    vector<int> v1 = {1, 2, 3, 4, 5};
+    vector<int> v2 = {1, 2, 7};
+    vector<int> ans = unionArray(v1, v2);
+    
+    for(auto el : ans) {
         cout<< el << " ";
-    }
-    cout << '\n';
+    } 
+    cout<< '\n';
     return 0;
 }
