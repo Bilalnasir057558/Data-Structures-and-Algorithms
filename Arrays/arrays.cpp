@@ -274,20 +274,22 @@ vector<int> unionArray(vector<int> &nums1, vector<int> &nums2)
 
     for(auto &it : mp) {
         ans.push_back(it.first);
-    }   
+    }
 
     return ans;
     */
-   
+
     // Brute Force Using Set
     // T.C = O((m+n)log(m+n))
     // S.C = O(m+n)
     set<int> st;
-    for(int i = 0; i < nums1.size(); i++) {
+    for (int i = 0; i < nums1.size(); i++)
+    {
         st.insert(nums1[i]);
     }
 
-    for(int j = 0; j < nums2.size(); j++) {
+    for (int j = 0; j < nums2.size(); j++)
+    {
         st.insert(nums2[j]);
     }
 
@@ -336,9 +338,143 @@ vector<int> unionArray(vector<int> &nums1, vector<int> &nums2)
     */
 }
 
+int findMaxConsecutiveOnes(vector<int> &nums)
+{
+    int count = 0, max_count = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] == 1)
+            count++;
+        else
+            count = 0;
+
+        // maximum of current streak and previous longest streak so far
+        // if current streak is 3 and previous longest is 2, then we found our new longest that's why max(3, 2) -> 3
+        // if current streak is less than the previous longest, then previous longest is the longest so far
+        max_count = max(count, max_count);
+    }
+
+    return max_count;
+}
+
+int singleNumber(vector<int> &nums) {
+
+    /*
+    // Brute force -> O(n^2)
+    for(int i = 0; i < nums.size(); i++) {
+        int count = 0;
+        for(int j = 0; j < nums.size(); j++) {
+            if(nums[i] == nums[j]) {
+                count++;
+            }
+        }
+        if(count == 1) return nums[i];
+    }
+
+    // this line should never be reacher, only to happy the compiler
+    return -1;
+    */
+
+    /*
+    // Better Appraoch -> T.C = O(N+M), S.C = O(M+1); M is the maxElement
+    int max_element = nums[0];
+    for(int i = 1; i < nums.size(); i++) {
+        max_element = max(nums[i], max_element);
+    }
+
+    vector<int> hash_array(max_element + 1, 0);
+    for(int i = 0; i < nums.size(); i++) {
+        hash_array[nums[i]]++;
+    }
+
+    for(int i = 0; i < nums.size(); i++) {
+        if(hash_array[nums[i]] == 1) return nums[i];
+    }
+
+    return -1;
+    */
+
+    // Optimal -> T.C = O(n)
+     int xorr = 0;
+    for(int i = 0; i < nums.size(); i++){
+        xorr = xorr ^ nums[i];
+    }
+    return xorr;
+}
+
+
+int longestSubArrayToSum(vector<int> nums, int k) {
+
+    // Better Approach -> O(n^2) , Brute includes third loop and goes to O(n^3)
+    /*
+    int max_length = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        int sum = 0;
+        for(int j = i; j < nums.size(); j++) {
+            sum += nums[j];
+            if(sum == k) {
+                max_length = max(j - i + 1, max_length);
+            }
+        }
+    }
+    return max_length;
+    */
+
+    /*
+    // Optimal Approach
+    unordered_map<int, int> prefix_sum_mp; // [prefixSum -> index]
+    int current_sum = 0;
+    int max_len = 0;
+
+    for(int i = 0; i < nums.size(); i++) {
+        current_sum += nums[i];
+
+        // Case 1: Sub-array starts from index 0
+        if(current_sum == k) {
+            max_len = max(i + 1, max_len);
+        }
+
+        // Case 2: Check if (curr_sum - k) happened before
+        int rem = current_sum - k;
+        if(prefix_sum_mp.find(rem) != prefix_sum_mp.end()) {
+            int length = i - prefix_sum_mp[rem];
+            max_len = max(length, max_len);
+        }
+
+        // Case 3: Only store the first occurrence of curr_sum in map
+        if(prefix_sum_mp.find(current_sum) == prefix_sum_mp.end()) {
+            prefix_sum_mp[current_sum] = i;
+        }
+    }
+    return max_len;
+    */
+
+    // Optimal Approach for +ve array (Sliding window approach)
+    // T.C = O(n)
+    int curr_sum = 0;
+    int max_len = 0;
+    int left = 0, right = 0;
+
+    while(right < nums.size()) {
+        curr_sum += nums[right];
+
+        while(curr_sum > k && left <= right) {
+            curr_sum -= nums[left];
+            left++;
+        }
+
+        if(curr_sum == k) {
+            max_len = max(right - left + 1, max_len);
+        }
+
+        right++;
+    }
+    return max_len;
+}
+
 int main()
 {
-    vector<int> v = {0, 0, 0, 3, 12};
+    vector<int> v = {1, 2, 3, 1, 1, 1, 3, 3};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -368,13 +504,20 @@ int main()
     // }
     // cout << '\n';
 
-    vector<int> v1 = {1, 2, 3, 4, 5};
-    vector<int> v2 = {1, 2, 7};
-    vector<int> ans = unionArray(v1, v2);
-    
-    for(auto el : ans) {
-        cout<< el << " ";
-    } 
-    cout<< '\n';
+    // vector<int> v1 = {1, 2, 3, 4, 5};
+    // vector<int> v2 = {1, 2, 7};
+    // vector<int> ans = unionArray(v1, v2);
+
+    // for (auto el : ans)
+    // {
+    //     cout << el << " ";
+    // }
+    // cout << '\n';
+
+    // cout<< "Max Consecutive 1's = " << findMaxConsecutiveOnes(v) << endl;
+
+    // cout<< "Element occurring once = " << singleNumber(v);
+
+    cout<< "Length of Longest Sub-array that sums to k = " << longestSubArrayToSum(v, 6) << endl;
     return 0;
 }
