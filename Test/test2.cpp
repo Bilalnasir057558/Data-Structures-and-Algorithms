@@ -118,6 +118,38 @@ void insertionSortRecursive(vector<int> &nums, int i, int n)
     insertionSortRecursive(nums, i + 1, n);
 }
 
+vector<vector<int>> mergeIntervals(vector<vector<int>> &intervals) {
+
+    // sort intervals by start time (default in sort())
+    sort(intervals.begin(), intervals.end());
+
+    vector<vector<int>> ans;
+    ans.push_back(intervals[0]);
+
+    // overlap checking
+    for(int i = 1; i < intervals.size(); i++) {
+        if(intervals[i][0] <= ans.back()[1]) {
+            ans.back()[1] = max(ans.back()[1], intervals[i][1]);
+        } else {
+            ans.push_back(intervals[i]);
+        }
+    }
+
+    return ans;
+}
+
+vector<int> stablePartition(vector<int> &nums) {
+    vector<int> neg;
+    vector<int> pos;
+
+    for(int i = 0; i < nums.size(); i++) {
+        if(nums[i] < 0) neg.push_back(nums[i]);
+        else pos.push_back(nums[i]);
+    }
+
+    neg.insert(neg.end(), pos.begin(), pos.end());
+    return neg;
+}
 
 int main()
 {
@@ -133,5 +165,21 @@ int main()
     //     cout << el << " ";
     // }
 
+    // vector<vector<int>> nums = {{1, 3}, {2, 6}, {15, 18}, {8, 10}};
+    // vector<vector<int>> ans = mergeIntervals(nums);
+
+    // for(auto el : ans) {
+    //     cout << "[" << el[0] << ", " << el[1] << "]" << ", ";
+    // }
+
+
+    vector<int> nums = {2, 0, -1, 4, 1, -2, -3, 0};
+    vector<int> ans = stablePartition(nums);
+
+    for(auto el : ans) {
+        cout << el << " ";
+    }
+
+    cout << '\n';
     return 0;
 }
