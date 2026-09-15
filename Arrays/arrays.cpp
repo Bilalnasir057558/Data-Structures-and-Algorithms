@@ -472,9 +472,47 @@ int longestSubArrayToSum(vector<int> nums, int k) {
     return max_len;
 }
 
+vector<int> twoSum(vector<int> &nums, int target) {
+
+    /*
+    // Brute Force -> O(n^2)
+    for(int i = 0; i < nums.size(); i++) {
+        for(int j = i + 1; j < nums.size(); j++) {
+            if(nums[i] + nums[j] == target) {
+                return {i, j};
+            }
+        }
+    }
+    return {-1, -1};
+    */
+
+    /*
+    // Optimal Approach with extra space -> O(n), S.C = O(n)
+    unordered_map<int, int> mp;
+    for(int i = 0; i < nums.size(); i++) {
+        int complement = target - nums[i];
+        if(mp.find(complement) != mp.end()) 
+            return {mp[complement], i};
+        mp[nums[i]] = i;
+    }
+    return {-1, -1};
+    */
+
+    // Optimal Solution without extra space -> only if the array is already sorted
+    int left = 0, right = nums.size() - 1;
+    while(left < right) {
+        if(nums[left] + nums[right] < target) {
+            left++;
+        } else if(nums[left] + nums[right] > target) right--;
+        else return {left, right};
+    }
+
+    return {-1, -1};
+}
+
 int main()
 {
-    vector<int> v = {1, 2, 3, 1, 1, 1, 3, 3};
+    vector<int> v = {1, 4, 7, 9};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -518,6 +556,12 @@ int main()
 
     // cout<< "Element occurring once = " << singleNumber(v);
 
-    cout<< "Length of Longest Sub-array that sums to k = " << longestSubArrayToSum(v, 6) << endl;
+    // cout<< "Length of Longest Sub-array that sums to k = " << longestSubArrayToSum(v, 6) << endl;
+
+    vector<int> ans = twoSum(v, 8);
+    for(auto el : ans) {
+        cout << el << " ";
+    }
+    cout<< "\n";
     return 0;
 }
