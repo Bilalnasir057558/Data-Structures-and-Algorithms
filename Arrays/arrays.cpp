@@ -357,7 +357,8 @@ int findMaxConsecutiveOnes(vector<int> &nums)
     return max_count;
 }
 
-int singleNumber(vector<int> &nums) {
+int singleNumber(vector<int> &nums)
+{
 
     /*
     // Brute force -> O(n^2)
@@ -395,15 +396,16 @@ int singleNumber(vector<int> &nums) {
     */
 
     // Optimal -> T.C = O(n)
-     int xorr = 0;
-    for(int i = 0; i < nums.size(); i++){
+    int xorr = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
         xorr = xorr ^ nums[i];
     }
     return xorr;
 }
 
-
-int longestSubArrayToSum(vector<int> nums, int k) {
+int longestSubArrayToSum(vector<int> nums, int k)
+{
 
     // Better Approach -> O(n^2) , Brute includes third loop and goes to O(n^3)
     /*
@@ -455,15 +457,18 @@ int longestSubArrayToSum(vector<int> nums, int k) {
     int max_len = 0;
     int left = 0, right = 0;
 
-    while(right < nums.size()) {
+    while (right < nums.size())
+    {
         curr_sum += nums[right];
 
-        while(curr_sum > k && left <= right) {
+        while (curr_sum > k && left <= right)
+        {
             curr_sum -= nums[left];
             left++;
         }
 
-        if(curr_sum == k) {
+        if (curr_sum == k)
+        {
             max_len = max(right - left + 1, max_len);
         }
 
@@ -472,7 +477,8 @@ int longestSubArrayToSum(vector<int> nums, int k) {
     return max_len;
 }
 
-vector<int> twoSum(vector<int> &nums, int target) {
+vector<int> twoSum(vector<int> &nums, int target)
+{
 
     /*
     // Brute Force -> O(n^2)
@@ -491,7 +497,7 @@ vector<int> twoSum(vector<int> &nums, int target) {
     unordered_map<int, int> mp;
     for(int i = 0; i < nums.size(); i++) {
         int complement = target - nums[i];
-        if(mp.find(complement) != mp.end()) 
+        if(mp.find(complement) != mp.end())
             return {mp[complement], i};
         mp[nums[i]] = i;
     }
@@ -500,19 +506,77 @@ vector<int> twoSum(vector<int> &nums, int target) {
 
     // Optimal Solution without extra space -> only if the array is already sorted
     int left = 0, right = nums.size() - 1;
-    while(left < right) {
-        if(nums[left] + nums[right] < target) {
+    while (left < right)
+    {
+        if (nums[left] + nums[right] < target)
+        {
             left++;
-        } else if(nums[left] + nums[right] > target) right--;
-        else return {left, right};
+        }
+        else if (nums[left] + nums[right] > target)
+            right--;
+        else
+            return {left, right};
     }
 
     return {-1, -1};
 }
 
+void sortZeroOneTwo(vector<int> &nums)
+{
+    /*
+    // Brute Force -> O(2n) -> iterations are more
+    int zeros = 0, ones = 0, twos = 0;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] == 0)
+            zeros++;
+        else if (nums[i] == 1)
+            ones++;
+        else
+            twos++;
+    }
+
+    int i = 0; 
+    while(zeros > 0) {
+        nums[i] = 0;
+        i++;
+        zeros--;
+    }
+    while(ones > 0) {
+        nums[i] = 1;
+        i++;
+        ones--;
+    }
+    while(twos > 0) {
+        nums[i] = 2;
+        i++;
+        twos--;
+    }
+
+    */
+
+    // Optimal Approach -> O(n) complexity same as brute but less iterations
+    int low = 0, mid = 0, high = nums.size() - 1;
+    
+    // loop until pointers don't cross means no elements in unsorted part
+    while(mid <= high) {
+        if(nums[mid] == 0) {
+            swap(nums[mid], nums[low]);
+            low++;
+            mid++;
+        } else if(nums[mid] == 1) {
+            mid++;
+        } else {
+            swap(nums[mid], nums[high]);
+            high--;
+        }
+    }
+}
+
+
 int main()
 {
-    vector<int> v = {1, 4, 7, 9};
+    vector<int> v = {0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -558,10 +622,14 @@ int main()
 
     // cout<< "Length of Longest Sub-array that sums to k = " << longestSubArrayToSum(v, 6) << endl;
 
-    vector<int> ans = twoSum(v, 8);
-    for(auto el : ans) {
+    // vector<int> ans = twoSum(v, 8);
+
+    sortZeroOneTwo(v);
+
+    for (auto el : v)
+    {
         cout << el << " ";
     }
-    cout<< "\n";
+    cout << "\n";
     return 0;
 }
