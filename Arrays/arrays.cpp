@@ -573,10 +573,60 @@ void sortZeroOneTwo(vector<int> &nums)
     }
 }
 
+int majorityElement(vector<int> &nums) {
+    int element = 0;
+    int count = 0;
+
+    for(int i = 0; i < nums.size(); i++) {
+        if(count == 0) {
+            element = nums[i]; // giving throne to next person, previous person's army is wiped out
+        }
+        
+        if (nums[i] == element) {
+            count++;
+        } else {
+            count--;
+        }
+    }
+    
+    return element;
+}
+
+int maxSubArraySum(vector<int> &nums) {
+
+
+    // Brute Force -> O(n^3)
+    /*
+    int max_sum = INT_MIN;
+    for(int i = 0; i < nums.size(); i++) {
+        for(int j = i; j < nums.size(); j++) {
+            int sum = 0;
+            for(int k = i; k <= j; k++) {
+                sum += nums[k];
+            }
+            max_sum = max(max_sum, sum);
+        }
+    }
+    return max_sum;
+    */
+
+    // Better Approach -> O(n^2)
+
+    int max_sum = INT_MIN;
+    for(int i = 0; i < nums.size(); i++) {
+        int sum = 0;
+        for(int j = i; j < nums.size(); j++) {
+            sum += nums[j];
+            max_sum = max(sum, max_sum);
+        }
+    }
+    return max_sum;
+}
+
 
 int main()
 {
-    vector<int> v = {0, 1, 1, 0, 1, 2, 1, 2, 0, 0, 0};
+    vector<int> v = {-2, -3, 4, -1, -2, 1, 5, -3};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -624,12 +674,18 @@ int main()
 
     // vector<int> ans = twoSum(v, 8);
 
-    sortZeroOneTwo(v);
+    // sortZeroOneTwo(v);
 
-    for (auto el : v)
-    {
-        cout << el << " ";
-    }
-    cout << "\n";
+    // for (auto el : v)
+    // {
+    //     cout << el << " ";
+    // }
+    // cout << "\n";
+
+    // int maj_el = majorityElement(v);
+    // cout << "Majority Element " << maj_el << endl;
+
+    int maxSum = maxSubArraySum(v);
+    cout << "Maximum subarray sum = " << maxSum << endl;
     return 0;
 }
