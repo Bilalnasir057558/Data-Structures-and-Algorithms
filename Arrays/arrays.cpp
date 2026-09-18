@@ -536,7 +536,7 @@ void sortZeroOneTwo(vector<int> &nums)
             twos++;
     }
 
-    int i = 0; 
+    int i = 0;
     while(zeros > 0) {
         nums[i] = 0;
         i++;
@@ -557,43 +557,55 @@ void sortZeroOneTwo(vector<int> &nums)
 
     // Optimal Approach -> O(n) complexity same as brute but less iterations
     int low = 0, mid = 0, high = nums.size() - 1;
-    
+
     // loop until pointers don't cross means no elements in unsorted part
-    while(mid <= high) {
-        if(nums[mid] == 0) {
+    while (mid <= high)
+    {
+        if (nums[mid] == 0)
+        {
             swap(nums[mid], nums[low]);
             low++;
             mid++;
-        } else if(nums[mid] == 1) {
+        }
+        else if (nums[mid] == 1)
+        {
             mid++;
-        } else {
+        }
+        else
+        {
             swap(nums[mid], nums[high]);
             high--;
         }
     }
 }
 
-int majorityElement(vector<int> &nums) {
+int majorityElement(vector<int> &nums)
+{
     int element = 0;
     int count = 0;
 
-    for(int i = 0; i < nums.size(); i++) {
-        if(count == 0) {
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (count == 0)
+        {
             element = nums[i]; // giving throne to next person, previous person's army is wiped out
         }
-        
-        if (nums[i] == element) {
+
+        if (nums[i] == element)
+        {
             count++;
-        } else {
+        }
+        else
+        {
             count--;
         }
     }
-    
+
     return element;
 }
 
-int maxSubArraySum(vector<int> &nums) {
-
+int maxSubArraySum(vector<int> &nums)
+{
 
     // Brute Force -> O(n^3)
     /*
@@ -611,7 +623,7 @@ int maxSubArraySum(vector<int> &nums) {
     */
 
     // Better Approach -> O(n^2)
-
+    /*
     int max_sum = INT_MIN;
     for(int i = 0; i < nums.size(); i++) {
         int sum = 0;
@@ -621,8 +633,60 @@ int maxSubArraySum(vector<int> &nums) {
         }
     }
     return max_sum;
+    */
+
+    // Optimal Approach - Kadane's Algorithm -> O(n)
+    int max_sum = INT_MIN;
+    int current_sum = 0;
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+        current_sum += nums[i];
+        max_sum = max(current_sum, max_sum);
+
+        if (current_sum < 0)
+        {
+            current_sum = 0;
+        }
+    }
+
+    return max_sum;
 }
 
+int maxSubArrayElements(vector<int> &nums)
+{
+    int max_sum = INT_MIN;
+    int sum = 0;
+
+    int start = 0;
+    int ansStart = -1, ansEnd = -1;
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+
+
+        sum += nums[i];
+        
+        if(sum > max_sum) {
+            max_sum = sum;
+            ansStart = start;
+            ansEnd = i;
+        }
+
+        if (sum < 0)
+        {
+            sum = 0;
+            start = i + 1; // when sum is zero, start fresh from the next element
+        }
+    }
+
+    for(int i = ansStart; i <= ansEnd; i++) {
+        cout<< nums[i] << " ";
+    }
+    cout << '\n';
+
+    return max_sum;
+}
 
 int main()
 {
@@ -685,7 +749,8 @@ int main()
     // int maj_el = majorityElement(v);
     // cout << "Majority Element " << maj_el << endl;
 
-    int maxSum = maxSubArraySum(v);
+    // int maxSum = maxSubArraySum(v);
+    int maxSum = maxSubArrayElements(v);
     cout << "Maximum subarray sum = " << maxSum << endl;
     return 0;
 }
