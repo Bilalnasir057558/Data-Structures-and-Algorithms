@@ -688,9 +688,23 @@ int maxSubArrayElements(vector<int> &nums)
     return max_sum;
 }
 
+int bestTimeToBuyAndSell(vector<int> &prices) {
+    int max_profit = 0;
+    int mini = prices[0];
+
+    for(int i = 1; i < prices.size(); i++) {
+        int profit = prices[i] - mini;
+        max_profit = max(max_profit, profit);
+        mini = min(mini, prices[i]);
+    }
+
+    return max_profit;
+}
+
+
 int main()
 {
-    vector<int> v = {-2, -3, 4, -1, -2, 1, 5, -3};
+    vector<int> v = {7, 1, 5, 3, 6, 4};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -750,7 +764,11 @@ int main()
     // cout << "Majority Element " << maj_el << endl;
 
     // int maxSum = maxSubArraySum(v);
-    int maxSum = maxSubArrayElements(v);
-    cout << "Maximum subarray sum = " << maxSum << endl;
+    // int maxSum = maxSubArrayElements(v);
+    // cout << "Maximum subarray sum = " << maxSum << endl;
+
+    int maxProfit = bestTimeToBuyAndSell(v);
+    cout << "Maximum Profit = " << maxProfit << endl;
+    cout << '\n';
     return 0;
 }
