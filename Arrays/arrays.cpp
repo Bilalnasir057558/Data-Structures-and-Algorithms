@@ -664,10 +664,10 @@ int maxSubArrayElements(vector<int> &nums)
     for (int i = 0; i < nums.size(); i++)
     {
 
-
         sum += nums[i];
-        
-        if(sum > max_sum) {
+
+        if (sum > max_sum)
+        {
             max_sum = sum;
             ansStart = start;
             ansEnd = i;
@@ -680,19 +680,22 @@ int maxSubArrayElements(vector<int> &nums)
         }
     }
 
-    for(int i = ansStart; i <= ansEnd; i++) {
-        cout<< nums[i] << " ";
+    for (int i = ansStart; i <= ansEnd; i++)
+    {
+        cout << nums[i] << " ";
     }
     cout << '\n';
 
     return max_sum;
 }
 
-int bestTimeToBuyAndSell(vector<int> &prices) {
+int bestTimeToBuyAndSell(vector<int> &prices)
+{
     int max_profit = 0;
     int mini = prices[0];
 
-    for(int i = 1; i < prices.size(); i++) {
+    for (int i = 1; i < prices.size(); i++)
+    {
         int profit = prices[i] - mini;
         max_profit = max(max_profit, profit);
         mini = min(mini, prices[i]);
@@ -701,10 +704,85 @@ int bestTimeToBuyAndSell(vector<int> &prices) {
     return max_profit;
 }
 
+vector<int> leaders(vector<int> &nums)
+{
+    /*
+    vector<int> leaders;
+    if(nums.empty()) return leaders;
+
+
+    for (int i = 0; i < nums.size() - 1; i++)
+    {
+        bool isLeader = true;
+        for (int j = i + 1; j < nums.size(); j++)
+        {
+            if (nums[i] < nums[j]) {
+                isLeader = false;
+                break;
+            }
+                
+        }
+        if(isLeader) leaders.push_back(nums[i]);
+    }
+    leaders.push_back(nums[nums.size() - 1]);
+    return leaders;
+
+    */
+
+    // Optimal Approach 
+    // T.C = O(n), S.C = O(n) in worst case b/c the extra space depends on input size, otherwise O(1) b/c extra space is used only for storing not solving
+    int n = nums.size();
+    if(n == 0) return {};
+    vector<int> leaders;
+    int maxi = nums[n - 1];
+    leaders.push_back(maxi);
+    for(int i = n - 2; i >= 0; i--) {
+        if(nums[i] > maxi) {
+            leaders.push_back(nums[i]);
+            maxi = nums[i];
+        }
+    }
+    reverse(leaders.begin(), leaders.end());
+    return leaders;
+}
+
+vector<int> rearrageArray(vector<int> &nums) {
+
+    /*
+    // Brute Force -> O(n + n/2) , S.C = 0(n)
+    vector<int> pos, neg;
+    for(int i = 0; i < nums.size(); i++) {
+        if(nums[i] < 0) neg.push_back(nums[i]);
+        else pos.push_back(nums[i]);
+    }
+
+    for(int i = 0; i < (nums.size() / 2); i++) {
+        nums[2 * i] = pos[i];
+        nums[2 * i + 1] = neg[i];
+    }
+
+    return nums;
+    */
+
+    // Optimal Approach
+    vector<int> ans(nums.size(), 0);
+    int negIdx = 1, posIdx = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        if(nums[i] < 0) {
+            ans[negIdx] = nums[i];
+            negIdx += 2;
+        } else {
+            ans[posIdx] = nums[i];
+            posIdx += 2; 
+        }
+    }
+
+    return ans;
+}
 
 int main()
 {
-    vector<int> v = {7, 1, 5, 3, 6, 4};
+    vector<int> v = {2, 4, 5, -1, -3, -5};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -767,8 +845,16 @@ int main()
     // int maxSum = maxSubArrayElements(v);
     // cout << "Maximum subarray sum = " << maxSum << endl;
 
-    int maxProfit = bestTimeToBuyAndSell(v);
-    cout << "Maximum Profit = " << maxProfit << endl;
+    // int maxProfit = bestTimeToBuyAndSell(v);
+    // cout << "Maximum Profit = " << maxProfit << endl;
+
+    // vector<int> ans = leaders(v);
+
+    vector<int> ans = rearrageArray(v);
+    for(auto el : ans) {
+        cout << el << " ";
+    }
+
     cout << '\n';
     return 0;
 }
