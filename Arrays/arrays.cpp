@@ -720,7 +720,7 @@ vector<int> leaders(vector<int> &nums)
                 isLeader = false;
                 break;
             }
-                
+
         }
         if(isLeader) leaders.push_back(nums[i]);
     }
@@ -729,15 +729,18 @@ vector<int> leaders(vector<int> &nums)
 
     */
 
-    // Optimal Approach 
+    // Optimal Approach
     // T.C = O(n), S.C = O(n) in worst case b/c the extra space depends on input size, otherwise O(1) b/c extra space is used only for storing not solving
     int n = nums.size();
-    if(n == 0) return {};
+    if (n == 0)
+        return {};
     vector<int> leaders;
     int maxi = nums[n - 1];
     leaders.push_back(maxi);
-    for(int i = n - 2; i >= 0; i--) {
-        if(nums[i] > maxi) {
+    for (int i = n - 2; i >= 0; i--)
+    {
+        if (nums[i] > maxi)
+        {
             leaders.push_back(nums[i]);
             maxi = nums[i];
         }
@@ -746,7 +749,8 @@ vector<int> leaders(vector<int> &nums)
     return leaders;
 }
 
-vector<int> rearrageArray(vector<int> &nums) {
+vector<int> rearrageArray(vector<int> &nums)
+{
 
     /*
     // Brute Force -> O(n + n/2) , S.C = 0(n)
@@ -764,6 +768,7 @@ vector<int> rearrageArray(vector<int> &nums) {
     return nums;
     */
 
+    /*
     // Optimal Approach
     vector<int> ans(nums.size(), 0);
     int negIdx = 1, posIdx = 0;
@@ -773,16 +778,242 @@ vector<int> rearrageArray(vector<int> &nums) {
             negIdx += 2;
         } else {
             ans[posIdx] = nums[i];
-            posIdx += 2; 
+            posIdx += 2;
         }
+    }
+
+    return ans;
+    */
+
+    // 2nd Variety => no. of pos and neg elements are not always equal
+    // T.C = O(n), S.C = O(n) + O(n) = O(n);
+    vector<int> neg, pos;
+    vector<int> ans(nums.size(), 0);
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (nums[i] < 0)
+            neg.push_back(nums[i]);
+        else
+            pos.push_back(nums[i]);
+    }
+
+    for (int i = 0; i < min(neg.size(), pos.size()); i++)
+    {
+        ans[2 * i] = pos[i];
+        ans[2 * i + 1] = neg[i];
+    }
+
+    // if(pos.size() > neg.size()) {
+    //     int idx = neg.size() * 2;
+    //     for(int i = neg.size(); i < pos.size(); i++) {
+    //         ans[idx] = pos[i];
+    //         idx++;
+    //     }
+    // } else {
+    //     int idx = pos.size() * 2;
+    //     for(int i = pos.size(); i < neg.size(); i++) {
+    //         ans[idx] = neg[i];
+    //         idx++;
+    //     }
+    // }
+
+    // General form of above if else
+    int minSize = min(neg.size(), pos.size());
+    int maxSize = max(neg.size(), pos.size());
+
+    int idx = minSize * 2;
+    for (int i = minSize; i < maxSize; i++)
+    {
+        ans[idx++] = (pos.size() > neg.size()) ? pos[i] : neg[i];
     }
 
     return ans;
 }
 
+void markRow(vector<vector<int>> &matrix, int n, int row)
+{
+    for (int j = 0; j < n; j++)
+    {
+        if (matrix[row][j] != 0)
+        {
+            matrix[row][j] = -9999999;
+        }
+    }
+}
+
+void markCol(vector<vector<int>> &matrix, int m, int col)
+{
+    for (int i = 0; i < m; i++)
+    {
+        if (matrix[i][col] != 0)
+        {
+            matrix[i][col] = -9999999;
+        }
+    }
+}
+
+void setZeros(vector<vector<int>> &matrix)
+{
+
+    /*
+    // Brute Force T.C = O(m * n) * O(m + n)
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            if(matrix[i][j] == 0) {
+                markRow(matrix, n, i);
+                markCol(matrix, m, j);
+            }
+        }
+    }
+
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            if(matrix[i][j] == -9999999) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    */
+
+    // Better Approach T.C = O(m + n), S.C = O(m + n)
+    /*
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    vector<int> row(m, 0);
+    vector<int> col(n, 0);
+
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            if(matrix[i][j] == 0) {
+                row[i] = 1;
+                col[j] = 1;
+            }
+        }
+    }
+
+    for(int i = 0; i < m; i++) {
+        for(int j = 0; j < n; j++) {
+            if(row[i] == 1 || col[j] == 1) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    */
+
+    // Optimal Approach T.C = O(m * n), S.C = O(1);
+    int m = matrix.size();
+    int n = matrix[0].size();
+    int col0 = 1;
+
+    // Mark 1st row and 1st col, if zero is found
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (matrix[i][j] == 0)
+            {
+
+                // mark ith row
+                matrix[i][0] = 0;
+
+                // mark jth col
+                if (j != 0)
+                {
+                    matrix[0][j] = 0;
+                }
+                else
+                {
+                    col0 = 0; // first col tracker
+                }
+            }
+        }
+    }
+
+    // updating inner cells
+    for (int i = 1; i < m; i++)
+    {
+        for (int j = 1; j < n; j++)
+        {
+            if (matrix[i][0] == 0 || matrix[0][j] == 0)
+            {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    // update first row
+    if (matrix[0][0] == 0)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            matrix[0][j] = 0;
+        }
+    }
+
+    // update first column
+    if (col0 == 0)
+    {
+        for (int i = 0; i < m; i++)
+        {
+            matrix[i][0] = 0;
+        }
+    }
+}
+
+vector<int> spiralOrder(vector<vector<int>> &matrix)
+{
+    int m = matrix.size();
+    int n = matrix[0].size();
+    vector<int> ans;
+
+    int top = 0, left = 0;
+    int bottom = m - 1, right = n - 1;
+
+    while (top <= bottom && left <= right)
+    {
+        for (int j = left; j <= right; j++)
+        {
+            ans.push_back(matrix[top][j]);
+        }
+        top++;
+
+        for (int i = top; i <= bottom; i++)
+        {
+            ans.push_back(matrix[i][right]);
+        }
+        right--;
+
+        if (top <= bottom)
+        {
+            for (int j = right; j >= left; j--)
+            {
+                ans.push_back(matrix[bottom][j]);
+            }
+            bottom--;
+        }
+
+        if (left <= right)
+        {
+            for (int i = bottom; i >= top; i--)
+            {
+                ans.push_back(matrix[i][left]);
+            }
+            left++;
+        }
+    }
+    return ans;
+}
+
 int main()
 {
-    vector<int> v = {2, 4, 5, -1, -3, -5};
+    vector<int> v = {-1, 2, 3, 4, -3, 1};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -850,7 +1081,26 @@ int main()
 
     // vector<int> ans = leaders(v);
 
-    vector<int> ans = rearrageArray(v);
+    // vector<int> ans = rearrageArray(v);
+    // for (auto el : ans)
+    // {
+    //     cout << el << " ";
+    // }
+
+    vector<vector<int>> matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+
+    // for (int i = 0; i < matrix.size(); i++)
+    // {
+    //     for (int j = 0; j < matrix[0].size(); j++)
+    //     {
+    //         cout << matrix[i][j] << " ";
+    //     };
+    //     cout << endl;
+    // }
+
+    // setZeros(matrix);
+    vector<int> ans = spiralOrder(matrix);
+
     for(auto el : ans) {
         cout << el << " ";
     }
