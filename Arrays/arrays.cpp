@@ -1011,6 +1011,45 @@ vector<int> spiralOrder(vector<vector<int>> &matrix)
     return ans;
 }
 
+void rotate(vector<vector<int>> &matrix)
+{
+
+    // Brute Force Approach
+    /*
+    int n = matrix.size();
+    vector<vector<int>> ans(n, vector<int>(n, 0));
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            ans[j][n - i - 1] = matrix[i][j];
+        }
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout<< ans[i][j] << " ";
+        }
+        cout << endl;
+    }
+    */
+
+    // Optimal Approach T.C = O(n*2), S.C = O(1);
+
+    int n = matrix.size();
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = i + 1; j < n; j++) {
+            swap(matrix[i][j], matrix[j][i]);
+        }
+    }
+
+    for(int i = 0; i < n; i++) {
+        reverse(matrix[i].begin(), matrix[i].end());
+    }
+}
+
 int main()
 {
     vector<int> v = {-1, 2, 3, 4, -3, 1};
@@ -1099,12 +1138,26 @@ int main()
     // }
 
     // setZeros(matrix);
-    vector<int> ans = spiralOrder(matrix);
+    // vector<int> ans = spiralOrder(matrix);
 
-    for(auto el : ans) {
-        cout << el << " ";
+    // for (auto el : ans)
+    // {
+    //     cout << el << " ";
+    // }
+
+    // cout << '\n';
+
+
+    rotate(matrix);
+
+    for (int i = 0; i < matrix.size(); i++)
+    {
+        for (int j = 0; j < matrix.size(); j++)
+        {
+            cout<< matrix[i][j] << " ";
+        }
+        cout << endl;
     }
 
-    cout << '\n';
     return 0;
 }
