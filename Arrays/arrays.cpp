@@ -1048,6 +1048,81 @@ void rotate(vector<vector<int>> &matrix)
     for(int i = 0; i < n; i++) {
         reverse(matrix[i].begin(), matrix[i].end());
     }
+
+}
+
+int valueAt(int n, int r) {
+    int ans = 1;
+    for(int i = 0; i < r; i++) {
+        ans *= (n - i);
+        ans /= (i + 1);
+    }
+    return ans;
+}
+
+vector<int> generateRow(int rowNumber) {
+    int n = rowNumber;
+    vector<int> row;
+    row.push_back(1);
+
+    long long ans = 1;
+    for(int i = 1; i < n; i++) {
+        ans *= (n - i);
+        ans /= i;
+        row.push_back(ans);
+    }
+
+    return row;
+}
+
+vector<vector<int>> generate(int numRows) {
+
+    /*
+    // Brute Force Approach -> O(N^3)
+    int n = numRows;
+    vector<vector<int>> triangle;
+    for(int row = 1; row <= n; row++) {
+        vector<int> tempList;
+
+        for(int col = 1; col <= row; col++) {
+            tempList.push_back(valueAt(row - 1, col - 1));
+        }
+        triangle.push_back(tempList);
+    }
+
+    return triangle; 
+
+    */
+
+    /*
+    // Optimal Approach T.C = O(N^2)
+    int n = numRows;
+    vector<vector<int>> ans;
+    for(int i = 1; i <= n; i++) {
+        vector<int> row = generateRow(i);
+        ans.push_back(row);
+    }
+
+    return ans;
+    */
+
+    // Alternative Optimal
+    int n = numRows;
+    vector<vector<int>> triangle;
+
+    for(int row = 0; row < n; row++) {
+        vector<int> current_row(row + 1, 1);
+
+        for(int col = 1; col < row; col++) {
+            current_row[col] = triangle[row - 1][col - 1] + triangle[row - 1][col];
+        }
+
+        triangle.push_back(current_row);
+
+    }
+
+    return triangle;
+
 }
 
 int main()
@@ -1126,7 +1201,7 @@ int main()
     //     cout << el << " ";
     // }
 
-    vector<vector<int>> matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    // vector<vector<int>> matrix = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
 
     // for (int i = 0; i < matrix.size(); i++)
     // {
@@ -1148,13 +1223,22 @@ int main()
     // cout << '\n';
 
 
-    rotate(matrix);
+    // rotate(matrix);
 
-    for (int i = 0; i < matrix.size(); i++)
-    {
-        for (int j = 0; j < matrix.size(); j++)
-        {
-            cout<< matrix[i][j] << " ";
+    // for (int i = 0; i < matrix.size(); i++)
+    // {
+    //     for (int j = 0; j < matrix.size(); j++)
+    //     {
+    //         cout<< matrix[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    int n = 8;
+    vector<vector<int>> result = generate(n);
+    for(int i = 0; i < n; i++) {
+        for(int j = 0; j <= i; j++) {
+            cout<< result[i][j] << " ";
         }
         cout << endl;
     }
