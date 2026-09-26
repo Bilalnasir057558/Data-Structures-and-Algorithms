@@ -1122,7 +1122,20 @@ vector<vector<int>> generate(int numRows) {
     }
 
     return triangle;
+}
 
+vector<long long> getRow(int rowIndex) {
+    vector<long long> row;
+    row.push_back(1);
+
+    long long ans = 1;
+    for(long long col = 1; col <= rowIndex; col++) {
+        ans *= rowIndex + 1 - col;
+        ans /= col;
+        row.push_back(ans);
+    }
+
+    return row;
 }
 
 int main()
@@ -1234,14 +1247,22 @@ int main()
     //     cout << endl;
     // }
 
-    int n = 8;
-    vector<vector<int>> result = generate(n);
-    for(int i = 0; i < n; i++) {
-        for(int j = 0; j <= i; j++) {
-            cout<< result[i][j] << " ";
-        }
-        cout << endl;
+    // int n = 8;
+    // vector<vector<int>> result = generate(n);
+    // for(int i = 0; i < n; i++) {
+    //     for(int j = 0; j <= i; j++) {
+    //         cout<< result[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+
+    int rowIndex = 6;
+    vector<long long> ans = getRow(rowIndex);
+
+    for(auto el : ans) {
+        cout << el << " ";
     }
+    cout<< '\n';
 
     return 0;
 }
