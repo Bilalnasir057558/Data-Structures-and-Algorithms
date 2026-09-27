@@ -1039,34 +1039,40 @@ void rotate(vector<vector<int>> &matrix)
     // Optimal Approach T.C = O(n*2), S.C = O(1);
 
     int n = matrix.size();
-    for(int i = 0; i < n - 1; i++) {
-        for(int j = i + 1; j < n; j++) {
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
             swap(matrix[i][j], matrix[j][i]);
         }
     }
 
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         reverse(matrix[i].begin(), matrix[i].end());
     }
-
 }
 
-int valueAt(int n, int r) {
+int valueAt(int n, int r)
+{
     int ans = 1;
-    for(int i = 0; i < r; i++) {
+    for (int i = 0; i < r; i++)
+    {
         ans *= (n - i);
         ans /= (i + 1);
     }
     return ans;
 }
 
-vector<int> generateRow(int rowNumber) {
+vector<int> generateRow(int rowNumber)
+{
     int n = rowNumber;
     vector<int> row;
     row.push_back(1);
 
     long long ans = 1;
-    for(int i = 1; i < n; i++) {
+    for (int i = 1; i < n; i++)
+    {
         ans *= (n - i);
         ans /= i;
         row.push_back(ans);
@@ -1075,7 +1081,8 @@ vector<int> generateRow(int rowNumber) {
     return row;
 }
 
-vector<vector<int>> generate(int numRows) {
+vector<vector<int>> generate(int numRows)
+{
 
     /*
     // Brute Force Approach -> O(N^3)
@@ -1090,7 +1097,7 @@ vector<vector<int>> generate(int numRows) {
         triangle.push_back(tempList);
     }
 
-    return triangle; 
+    return triangle;
 
     */
 
@@ -1110,26 +1117,31 @@ vector<vector<int>> generate(int numRows) {
     int n = numRows;
     vector<vector<int>> triangle;
 
-    for(int row = 0; row < n; row++) {
+    for (int row = 0; row < n; row++)
+    {
         vector<int> current_row(row + 1, 1);
 
-        for(int col = 1; col < row; col++) {
+        for (int col = 1; col < row; col++)
+        {
             current_row[col] = triangle[row - 1][col - 1] + triangle[row - 1][col];
         }
 
         triangle.push_back(current_row);
-
     }
 
     return triangle;
 }
 
-vector<long long> getRow(int rowIndex) {
+vector<long long> getRow(int rowIndex)
+{
+
+    // Optimal Approach T.C = O(rowIndex), S.C = O(rowIndex)
     vector<long long> row;
     row.push_back(1);
 
     long long ans = 1;
-    for(long long col = 1; col <= rowIndex; col++) {
+    for (long long col = 1; col <= rowIndex; col++)
+    {
         ans *= rowIndex + 1 - col;
         ans /= col;
         row.push_back(ans);
@@ -1138,9 +1150,88 @@ vector<long long> getRow(int rowIndex) {
     return row;
 }
 
+vector<vector<int>> threeSum(vector<int> &nums)
+{
+    /*
+    int n = nums.size();
+    set<vector<int>> uniqueTriplets;
+
+    for (int i = 0; i < n - 2; i++)
+    {
+        for (int j = i + 1; j < n - 1; j++)
+        {
+            for (int k = j + 1; k < n; k++)
+            {
+                if (nums[i] + nums[j] + nums[k] == 0)
+                {
+                    vector<int> temp = {nums[i], nums[j], nums[k]};
+                    sort(temp.begin(), temp.end());
+                    uniqueTriplets.insert(temp);
+                }
+            }
+        }
+    }
+
+    vector<vector<int>> ans(uniqueTriplets.begin(), uniqueTriplets.end());
+    return ans;
+    */
+
+    /*
+    // Better Approach O(N^2LogM) 
+
+    int n = nums.size();
+    set<vector<int>> ans;
+    for(int i = 0; i < n; i++) {
+        unordered_set<int> hash_set;
+
+        for(int j = i + 1; j < n; j++) {
+            int third = - (nums[i] + nums[j]);
+            
+            if(hash_set.find(third) != hash_set.end()) {
+                vector<int> temp = {nums[i], nums[j], third};
+                sort(temp.begin(), temp.end());
+                ans.insert(temp);
+            }
+
+            hash_set.insert(nums[j]);
+        }
+    }
+
+    return vector<vector<int>>(ans.begin(), ans.end());
+    */
+
+    // Optimal Approach
+    int n = nums.size();
+    vector<vector<int>> ans;
+    sort(nums.begin(), nums.end());
+
+    for(int i = 0; i < n; i++) {
+
+        // skip if ith element is same
+        if(i > 0 && nums[i] == nums[i - 1]) continue;
+
+        int left = i + 1, right = n - 1;
+
+        while(left < right) {
+            int sum = nums[i] + nums[left] + nums[right];
+            if(sum == 0) {
+                ans.push_back({nums[i], nums[left], nums[right]});
+                left++;
+                right--;
+
+                while(left < right && nums[left] == nums[left - 1]) left++;
+                while(left < right && nums[right] == nums[right + 1]) right--;
+            }
+            else if(sum < 0) left++;
+            else right--;
+        }
+    }
+    return ans;
+}
+
 int main()
 {
-    vector<int> v = {-1, 2, 3, 4, -3, 1};
+    vector<int> v = {-2, 1, 1, 1, 1, 1};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -1235,7 +1326,6 @@ int main()
 
     // cout << '\n';
 
-
     // rotate(matrix);
 
     // for (int i = 0; i < matrix.size(); i++)
@@ -1256,13 +1346,25 @@ int main()
     //     cout << endl;
     // }
 
-    int rowIndex = 6;
-    vector<long long> ans = getRow(rowIndex);
+    // int rowIndex = 6;
+    // vector<long long> ans = getRow(rowIndex);
 
-    for(auto el : ans) {
-        cout << el << " ";
+    // for (auto el : ans)
+    // {
+    //     cout << el << " ";
+    // }
+    // cout << '\n';
+
+
+
+    vector<vector<int>> ans = threeSum(v);
+
+    for(int i = 0; i < ans.size(); i++) {
+        for(int j = 0; j < ans[0].size(); j++) {
+            cout<< ans[i][j] << " ";
+        }
+        cout<< endl;
     }
-    cout<< '\n';
 
     return 0;
 }
