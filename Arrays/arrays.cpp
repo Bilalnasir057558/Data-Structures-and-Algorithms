@@ -1229,9 +1229,96 @@ vector<vector<int>> threeSum(vector<int> &nums)
     return ans;
 }
 
+vector<vector<int>> fourSum(vector<int>& nums, int target) {
+
+    /*
+    // Brute Force -> O(n^4)
+    int n = nums.size();
+    set<vector<int>> ans_set;
+
+    for(int i = 0; i < n - 3; i++) {
+        for(int j = i + 1; j < n - 2; j++) {
+            for(int k = j + 1; k < n - 1; k++) {
+                for(int l = k + 1; l < n; l++) {
+                    long long sum = nums[i] + nums[j];
+                    sum += nums[k];
+                    sum += nums[l];
+                    if(sum == target) {
+                        vector<int> tempList = {nums[i], nums[j], nums[k], nums[l]};
+                        sort(tempList.begin(), tempList.end());
+                        ans_set.insert(tempList);
+                    }
+                }
+            }
+        }
+    }
+
+    return vector<vector<int>>(ans_set.begin(), ans_set.end());
+    */
+
+    /*
+    // Better Approach -> T.C = O(n^3 log m) 
+    // S.C = O(n * m)
+    int n = nums.size();
+    set<vector<int>> ans_set;
+
+    for(int i = 0; i < n - 2; i++) {
+        for(int j = i + 1; j < n - 1; j++) {
+            unordered_set<int> tempSet;
+            for(int k = j + 1; k < n; k++) {
+                int fourth = target - (nums[i] + nums[j] + nums[k]);
+                if(tempSet.find(fourth) != tempSet.end()) {
+                    vector<int> tempList = {nums[i], nums[j], nums[k], fourth};
+                    ans_set.insert(tempList);
+                }
+                tempSet.insert(nums[k]);
+            }
+        }
+    }
+    return vector<vector<int>>(ans_set.begin(), ans_set.end());
+
+    */
+
+    // Optimal Approach Using Two Pointers
+    int n = nums.size();
+    vector<vector<int>> ans;
+    sort(nums.begin(), nums.end());
+
+    for(int i = 0; i < n; i++) {
+
+        // Skip duplicates for the first number
+        if(i > 0 && nums[i] == nums[i - 1]) continue; 
+        for(int j = i + 1; j < n; j++) {
+
+            // Skip duplicates for the second number
+            if(j > (i + 1) && nums[j] == nums[j - 1]) continue;
+
+            int left = j + 1, right = n - 1;
+
+            while(left < right) {
+                long long sum = (long long)nums[i] + nums[j] + nums[left] + nums[right];
+                if(sum == target) {
+                    ans.push_back({nums[i], nums[j], nums[left], nums[right]});
+                    left++;
+                    right--;
+
+                    // Skip duplicates for the third and fourth numbers
+                    while(left < right && nums[left] == nums[left - 1]) left++;
+                    while(left < right && nums[right] == nums[right + 1]) right--; 
+                } else if(sum < target) {
+                    left++;
+                } else right--;
+            }
+            
+        }
+    }
+    return ans;
+}
+
+
 int main()
 {
-    vector<int> v = {-2, 1, 1, 1, 1, 1};
+    vector<int> v = {2, 2, 2, 2, 2};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -1357,7 +1444,8 @@ int main()
 
 
 
-    vector<vector<int>> ans = threeSum(v);
+    // vector<vector<int>> ans = threeSum(v);
+    vector<vector<int>> ans = fourSum(v, 8);
 
     for(int i = 0; i < ans.size(); i++) {
         for(int j = 0; j < ans[0].size(); j++) {
