@@ -1177,7 +1177,7 @@ vector<vector<int>> threeSum(vector<int> &nums)
     */
 
     /*
-    // Better Approach O(N^2LogM) 
+    // Better Approach O(N^2LogM)
 
     int n = nums.size();
     set<vector<int>> ans;
@@ -1186,7 +1186,7 @@ vector<vector<int>> threeSum(vector<int> &nums)
 
         for(int j = i + 1; j < n; j++) {
             int third = - (nums[i] + nums[j]);
-            
+
             if(hash_set.find(third) != hash_set.end()) {
                 vector<int> temp = {nums[i], nums[j], third};
                 sort(temp.begin(), temp.end());
@@ -1205,31 +1205,40 @@ vector<vector<int>> threeSum(vector<int> &nums)
     vector<vector<int>> ans;
     sort(nums.begin(), nums.end());
 
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
 
         // skip if ith element is same
-        if(i > 0 && nums[i] == nums[i - 1]) continue;
+        if (i > 0 && nums[i] == nums[i - 1])
+            continue;
 
         int left = i + 1, right = n - 1;
 
-        while(left < right) {
+        while (left < right)
+        {
             int sum = nums[i] + nums[left] + nums[right];
-            if(sum == 0) {
+            if (sum == 0)
+            {
                 ans.push_back({nums[i], nums[left], nums[right]});
                 left++;
                 right--;
 
-                while(left < right && nums[left] == nums[left - 1]) left++;
-                while(left < right && nums[right] == nums[right + 1]) right--;
+                while (left < right && nums[left] == nums[left - 1])
+                    left++;
+                while (left < right && nums[right] == nums[right + 1])
+                    right--;
             }
-            else if(sum < 0) left++;
-            else right--;
+            else if (sum < 0)
+                left++;
+            else
+                right--;
         }
     }
     return ans;
 }
 
-vector<vector<int>> fourSum(vector<int>& nums, int target) {
+vector<vector<int>> fourSum(vector<int> &nums, int target)
+{
 
     /*
     // Brute Force -> O(n^4)
@@ -1257,7 +1266,7 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
     */
 
     /*
-    // Better Approach -> T.C = O(n^3 log m) 
+    // Better Approach -> T.C = O(n^3 log m)
     // S.C = O(n * m)
     int n = nums.size();
     set<vector<int>> ans_set;
@@ -1284,41 +1293,197 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
     vector<vector<int>> ans;
     sort(nums.begin(), nums.end());
 
-    for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
 
         // Skip duplicates for the first number
-        if(i > 0 && nums[i] == nums[i - 1]) continue; 
-        for(int j = i + 1; j < n; j++) {
+        if (i > 0 && nums[i] == nums[i - 1])
+            continue;
+        for (int j = i + 1; j < n; j++)
+        {
 
             // Skip duplicates for the second number
-            if(j > (i + 1) && nums[j] == nums[j - 1]) continue;
+            if (j > (i + 1) && nums[j] == nums[j - 1])
+                continue;
 
             int left = j + 1, right = n - 1;
 
-            while(left < right) {
+            while (left < right)
+            {
                 long long sum = (long long)nums[i] + nums[j] + nums[left] + nums[right];
-                if(sum == target) {
+                if (sum == target)
+                {
                     ans.push_back({nums[i], nums[j], nums[left], nums[right]});
                     left++;
                     right--;
 
                     // Skip duplicates for the third and fourth numbers
-                    while(left < right && nums[left] == nums[left - 1]) left++;
-                    while(left < right && nums[right] == nums[right + 1]) right--; 
-                } else if(sum < target) {
+                    while (left < right && nums[left] == nums[left - 1])
+                        left++;
+                    while (left < right && nums[right] == nums[right + 1])
+                        right--;
+                }
+                else if (sum < target)
+                {
                     left++;
-                } else right--;
+                }
+                else
+                    right--;
             }
-            
         }
     }
     return ans;
 }
 
+vector<int> majorityElementII(vector<int> &nums)
+{
+    /*
+    // brute force
+    int n = nums.size();
+    vector<int> ans;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (ans.size() == 0 || find(ans.begin(), ans.end(), nums[i]) == ans.end())
+        {
+            int count = 0;
+
+            for (int j = 0; j < n; j++)
+            {
+                if (nums[i] == nums[j])
+                    count++;
+            }
+
+            if (count > (n / 3))
+                ans.push_back(nums[i]);
+
+            if (ans.size() == 2)
+                break;
+        }
+    }
+    return ans;
+    */
+
+    /*
+    // Better Approach
+    int n = nums.size();
+    unordered_map<int, int> mp;
+    vector<int> ans;
+
+    for(int i = 0; i < n; i++) {
+        mp[nums[i]]++;
+
+        if(mp[nums[i]] > (n / 3) + 1) {
+            ans.push_back(nums[i]);
+        }
+    }
+
+    return ans;
+    */
+
+    // Optimal Approach
+    int n = nums.size();
+    vector<int> ans;
+
+    int el1 = INT_MIN, el2 = INT_MIN;
+    int cnt1 = 0, cnt2 = 0;
+
+    // Identify top 2 candidates b/c at most 2 elements have more that n/3 occurrences
+    for(int i = 0; i < n; i++) {
+        if(cnt1 == 0 && el2 != nums[i]) {
+            el1 = nums[i];
+            cnt1 = 1;
+        } else if(cnt2 == 0 && el1 != nums[i]) {
+            el2 = nums[i];
+            cnt2 = 1;
+        } else if(nums[i] == el1) {
+            cnt1++;
+        } else if(nums[i] == el2) {
+            cnt2++;
+        } else {
+            cnt1--;
+            cnt2--;
+        }
+    }
+
+    // verify their frequency
+    cnt1 = 0, cnt2 = 0;
+    for(int i = 0; i < n; i++) {
+        if(nums[i] == el1) cnt1++;
+        else if(nums[i] == el2) cnt2++;
+    }
+
+    if(cnt1 > (n / 3)) ans.push_back(el1);
+    if(cnt2 > (n / 3)) ans.push_back(el2);
+
+    return ans;
+}
+
+vector<int> findErrorNums(vector<int>& nums) {
+
+    /*
+    // Brute Force
+    int n = nums.size();
+    int missing = -1;
+    int repeating = -1;
+
+    // Count how many times the number 'i' appears in the array
+    for(int i = 1; i <= n; i++) {
+        int count = 0;
+        for(int j = 0; j < n; j++) {
+            if(i == nums[j]) {
+                count++;
+            }
+        }
+        if(count == 0) missing = i;
+        if(count == 2) repeating = i; 
+    }
+    
+    return {repeating, missing};
+    */
+    
+    /*
+    // Better Approach
+    int n = nums.size();
+    int missing = -1, repeating = -1;
+    vector<int> hash_array(n + 1, 0);
+
+    for(int i = 0; i < n; i++) {
+        hash_array[nums[i]]++;
+    }
+
+    for(int i = 1; i <= n; i++) {
+        if(hash_array[i] == 0) missing = i;
+        if(hash_array[i] == 2) repeating = i;
+    }
+
+    return {repeating, missing};
+    */
+
+    // Optimal Approach
+    long long n = nums.size();
+    long long S = 0, S2 = 0;
+    long long SN = (n * (n + 1)) / 2;
+    long long S2N = (n * (n + 1) * (2 * n + 1)) / 6;
+
+    for(int i = 0; i < n; i++) {
+        S += nums[i];
+        S2 += (long long)nums[i] * (long long)nums[i];
+    }
+
+    long long val1 = SN - S; // y - x
+    long long val2 = S2N - S2;
+    val2 = val2 / val1; // y + x
+
+    long long y = (val1 + val2) / 2;
+    long long x = val2 - y;
+
+    return {(int)x, (int)y};
+}
 
 int main()
 {
-    vector<int> v = {2, 2, 2, 2, 2};
+    vector<int> v = {4, 6, 1, 3, 2, 2};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -1442,17 +1607,24 @@ int main()
     // }
     // cout << '\n';
 
-
-
     // vector<vector<int>> ans = threeSum(v);
-    vector<vector<int>> ans = fourSum(v, 8);
+    // vector<vector<int>> ans = fourSum(v, 8);
 
-    for(int i = 0; i < ans.size(); i++) {
-        for(int j = 0; j < ans[0].size(); j++) {
-            cout<< ans[i][j] << " ";
-        }
-        cout<< endl;
+    // for(int i = 0; i < ans.size(); i++) {
+    //     for(int j = 0; j < ans[0].size(); j++) {
+    //         cout<< ans[i][j] << " ";
+    //     }
+    //     cout<< endl;
+    // }
+
+    // vector<int> ans = majorityElementII(v);
+
+    vector<int> ans = findErrorNums(v);
+    for (int i = 0; i < ans.size(); i++)
+    {
+        cout << ans[i] << " ";
     }
+    cout << '\n';
 
     return 0;
 }
