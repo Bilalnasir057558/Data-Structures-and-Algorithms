@@ -1373,7 +1373,7 @@ vector<int> majorityElementII(vector<int> &nums)
     for(int i = 0; i < n; i++) {
         mp[nums[i]]++;
 
-        if(mp[nums[i]] > (n / 3) + 1) {
+        if(mp[nums[i]] == (n / 3) + 1) {
             ans.push_back(nums[i]);
         }
     }
@@ -1481,9 +1481,225 @@ vector<int> findErrorNums(vector<int>& nums) {
     return {(int)x, (int)y};
 }
 
+/*
+
+long long merge(vector<int>& nums, int low, int mid, int high) {
+    int left = low;
+    int right = mid + 1;
+    vector<int> ans;
+
+    long long count = 0;
+    while(left <= mid && right <= high) {
+        if(nums[left] < nums[right]) {
+            ans.push_back(nums[left++]);
+        } else {
+            ans.push_back(nums[right++]);
+            count += (mid - left + 1);
+        }
+    }
+
+    while(left <= mid) {
+        ans.push_back(nums[left++]);
+    }
+    while(right <= high) {
+        ans.push_back(nums[right++]);
+    }
+
+    for (int k = low; k <= high; k++) {
+        nums[k] = ans[k - low];
+    }
+
+    return count;
+}
+
+
+long long mergeSort(vector<int>& nums, int low, int high) {
+    long long count = 0;
+    if(low >= high) return count;
+
+    int mid = low + (high - low) / 2;
+
+    // left half
+    count += mergeSort(nums, low, mid);
+
+    // right half
+    count += mergeSort(nums, mid + 1, high);
+
+    // merge 
+    count += merge(nums, low, mid, high);
+
+    return count;
+    
+}
+
+
+long long countInversions(vector<int>& nums) {
+    // Brute Force
+    
+    int count = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        for(int j = i + 1; j < nums.size(); j++) {
+            if(nums[i] > nums[j]) count++;
+        }
+    }
+    return count;
+
+    
+
+    // Optimal Approach
+    long long count = mergeSort(nums, 0, nums.size() - 1);
+    return count;
+
+}
+
+
+long long merge(vector<int> & nums, int low, int mid, int high) {
+    int left = low;
+    int right = mid + 1;
+
+    long long count = 0;
+    int j = right;
+    for(int i = low; i <= mid; i++) {
+        while(j <= high && nums[i] > 2LL * nums[j]) {
+            j++;
+        }
+
+        count += j - (mid + 1);
+    }
+
+    vector<int> temp;
+    while(left <= mid && right <= high) {
+        if(nums[left] < nums[right]) {
+            temp.push_back(nums[left++]);
+        } else temp.push_back(nums[right++]);
+    }
+
+    while(left <= mid) {
+        temp.push_back(nums[left++]);
+    }
+    while(right <= high) {
+        temp.push_back(nums[right++]);
+    }
+
+    for (int k = low; k <= high; k++) {
+        nums[k] = temp[k - low];
+    }
+
+    return count;
+}
+
+long long mergeSort(vector<int>& nums, int low, int high) {
+    long long count = 0;
+    if(low >= high) return count;
+
+    int mid = low + (high - low) / 2;
+
+    count += mergeSort(nums, low, mid);
+    count += mergeSort(nums, mid + 1, high);
+    count += merge(nums, low, mid, high);
+
+    return count;
+}
+
+int reversePairs(vector<int>& nums) {
+
+    
+    // Brute Force 
+    int n = nums.size();
+    int count = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        for(int j = i + 1; j < nums.size(); j++) {
+            if(nums[i] > 2 * nums[j]) count++;
+        }
+    }
+    return count;
+
+    
+
+    // Optimal Solution
+    return mergeSort(nums, 0, nums.size() - 1);
+}
+*/
+int maxProduct(vector<int> & nums) {
+    
+    /*
+    // Brute Force
+    int max_prod = INT_MIN;
+    for(int i = 0; i < nums.size(); i++) {
+        for(int j = i; j < nums.size(); j++) {
+            int prod = nums[i];
+            for(int k = i + 1; k <= j; k++) {
+                prod *= nums[k];
+            }
+
+            max_prod = max(max_prod, prod);
+        }
+    }
+
+    return max_prod;
+
+    
+
+    // Better Approach
+    int max_prod = INT_MIN;
+    for(int i = 0; i < nums.size(); i++) {
+        int prod = 1;
+        
+        for(int j = i; j < nums.size(); j++) {
+            prod *= nums[j];
+            max_prod = max(max_prod, prod);
+        }
+    }
+    return max_prod;
+    */
+
+    int maxEnding = nums[0];
+    int minEnding = nums[0];
+    int answer = nums[0];
+
+    for(int i = 1; i < nums.size(); i++) {
+        int x = nums[i];
+
+        int a = x * maxEnding;
+        int b = x * minEnding;
+
+        maxEnding = max(x, max(a, b));
+        minEnding = min(x, min(a, b));
+
+        answer = max(answer, maxEnding);
+    }
+    return answer;
+}
+
+
+void mergeSortedArrays(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+
+    // Optimal Approach - In-place
+    int i = m - 1;
+    int j = n - 1;
+    int k = m + n - 1;
+
+    while(i >= 0 && j >= 0) {
+        if(nums1[i] > nums2[j]) {
+            nums1[k] = nums1[i];
+            i--;
+        } else {
+            nums1[k] = nums2[j];
+            j--;
+        }
+        k--;
+    }
+
+    while(j >= 0) {
+        nums1[k] = nums2[j];
+        j--;
+        k--;
+    }
+}
+
 int main()
 {
-    vector<int> v = {4, 6, 1, 3, 2, 2};
+    vector<int> v = {2, 3, -2, 4};
     // cout << "Largest Element =  " << largestElement(v) << endl;
 
     // cout << "Second Largest Element = " << secondLargestElement(v) << endl;
@@ -1619,12 +1835,28 @@ int main()
 
     // vector<int> ans = majorityElementII(v);
 
-    vector<int> ans = findErrorNums(v);
-    for (int i = 0; i < ans.size(); i++)
-    {
-        cout << ans[i] << " ";
-    }
-    cout << '\n';
+    // vector<int> ans = findErrorNums(v);
+    // for (int i = 0; i < ans.size(); i++)
+    // {
+    //     cout << ans[i] << " ";
+    // }
+    // cout << '\n';
 
+    // long long inversions = countInversions(v);
+    // cout<< "Number of Inversions : " << inversions << endl;
+
+    // cout<< "Reverse Pairs = " << reversePairs(v) << endl;
+
+    // cout << "Maximum Subarray Product = " << maxProduct(v) << endl;
+
+    vector<int> nums1 = {1, 3, 5, 0, 0, 0};
+    vector<int> nums2 = {2, 4, 6};
+
+    mergeSortedArrays(nums1, nums1.size() - nums2.size(), nums2, nums2.size());
+
+    for(int i = 0; i < nums1.size(); i++) {
+        cout<< nums1[i] << " ";
+    }
+    cout<< '\n';
     return 0;
 }
