@@ -1,33 +1,34 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
-vector<vector<int>> countFrequencies(vector<int>& nums) {
-    
+vector<vector<int>> countFrequencies(vector<int> &nums)
+{
+
     // Using array hashing
-     // In worst case where all the array elements are unique, it uses N unique elements -> space complexity = O(N)
-        // vector<vector<int>> ans;
+    // In worst case where all the array elements are unique, it uses N unique elements -> space complexity = O(N)
+    // vector<vector<int>> ans;
 
-        // // O(n) - n = size of nums
-        // auto maxIt = max_element(nums.begin(), nums.end()); 
+    // // O(n) - n = size of nums
+    // auto maxIt = max_element(nums.begin(), nums.end());
 
-        // // if M is maxElement then it uses O(M) auxiliary space
-        // vector<int> hash(*maxIt + 1, 0);
+    // // if M is maxElement then it uses O(M) auxiliary space
+    // vector<int> hash(*maxIt + 1, 0);
 
-        // // pre-computation takes O(n)
-        // for(int i = 0; i < nums.size(); i++) {
-        //     hash[nums[i]]++;
-        // }
+    // // pre-computation takes O(n)
+    // for(int i = 0; i < nums.size(); i++) {
+    //     hash[nums[i]]++;
+    // }
 
-        // // takes O(M) -> M + 1 is the size of hash array
-        // for(int i = 0; i < hash.size(); i++) {
-        //     if(hash[i] > 0) {
-        //         ans.push_back({i, hash[i]});
-        //     }
-        // }
+    // // takes O(M) -> M + 1 is the size of hash array
+    // for(int i = 0; i < hash.size(); i++) {
+    //     if(hash[i] > 0) {
+    //         ans.push_back({i, hash[i]});
+    //     }
+    // }
 
-        // // T.C = O(N) + O(N) + O(M) -> O(N + M)
-        // // S.C = O(N + M)
-        // return ans;
+    // // T.C = O(N) + O(N) + O(M) -> O(N + M)
+    // // S.C = O(N + M)
+    // return ans;
 
     // in worst case, if all elements are unique in array, then it takes n space
     vector<vector<int>> ans;
@@ -35,32 +36,35 @@ vector<vector<int>> countFrequencies(vector<int>& nums) {
     // in worst case, if all elements are unique in array, then it takes n space
     unordered_map<int, int> mp;
 
-
     // takes O(n) n = size of nums
-    for(int i = 0; i < nums.size(); i++) {
+    for (int i = 0; i < nums.size(); i++)
+    {
         mp[nums[i]] += 1; // takes O(1) in best and avg case and worst case is rare
     };
 
-
-    // takes O(n)  
-    for(auto el : mp) {
-        ans.push_back( { el.first, el.second } );
+    // takes O(n)
+    for (auto el : mp)
+    {
+        ans.push_back({el.first, el.second});
     };
 
     return ans;
 }
 
-
-int testMaxOccurrence(vector<int> nums) {
+int testMaxOccurrence(vector<int> nums)
+{
     unordered_map<int, int> mp;
-    for(int i = 0; i < nums.size(); i++) {
+    for (int i = 0; i < nums.size(); i++)
+    {
         mp[nums[i]]++;
     };
 
     int maxCount = 0;
     int maxElement = nums[0];
-    for(auto el : mp) {
-        if(el.second > maxCount) {
+    for (auto el : mp)
+    {
+        if (el.second > maxCount)
+        {
             maxCount = el.second;
             maxElement = el.first;
         }
@@ -69,7 +73,8 @@ int testMaxOccurrence(vector<int> nums) {
     return maxElement;
 }
 
-void testSumToTarget(vector<int> nums, int target) {
+void testSumToTarget(vector<int> nums, int target)
+{
 
     // Brute Force
     // for(int i = 0; i < nums.size() - 1; i++) {
@@ -79,42 +84,185 @@ void testSumToTarget(vector<int> nums, int target) {
     //         }
     //     }
     // }
-
 }
 
-void testCharFrequency(string s) {
+void testCharFrequency(string s)
+{
 
     unordered_map<char, int> mp;
-    for(int i = 0; i < s.size(); i++) {
+    for (int i = 0; i < s.size(); i++)
+    {
         mp[s[i]]++;
     };
 
     // map does'nt preserve order, iteration order depends upon hashing order
     // In order to find first unique char in a string, we can't iterate over the map, iterate string order
-    for(auto el : s) {
-        if(mp[el] == 1) {
-            cout<< el << endl;
+    for (auto el : s)
+    {
+        if (mp[el] == 1)
+        {
+            cout << el << endl;
             break;
         }
     }
 }
 
-void twoSumHashSet(vector<int> nums, int target) {
+void twoSumHashSet(vector<int> nums, int target)
+{
 
-    // in worst case it can hold upto n elements O(n) space complexity    
+    // in worst case it can hold upto n elements O(n) space complexity
     unordered_set<int> seen;
 
     // takes O(n)
-    for(int i = 0; i < nums.size(); i++) {
+    for (int i = 0; i < nums.size(); i++)
+    {
         int complement = target - nums[i];
-        if(seen.count(complement)) {
-            cout<< complement << " " << nums[i] << endl;
+        if (seen.count(complement))
+        {
+            cout << complement << " " << nums[i] << endl;
         }
         seen.insert(nums[i]);
     }
 }
 
-int main() {
+int longestConsecutive(vector<int> &nums)
+{
+
+    /*
+    // Brute Force
+    // O(nlogn)
+    if(nums.size() == 0) return 0;
+    sort(nums.begin(), nums.end());
+
+    int maxLen = 1;
+    int len = 1;
+
+    for(int i = 1; i < nums.size(); i++) {
+        if(nums[i - 1] == nums[i]) continue;
+
+
+        if(nums[i] == nums[i - 1] + 1) {
+            len++;
+        } else {
+            len = 1; // start new sequence
+        }
+        maxLen = max(len, maxLen);
+    }
+
+    return maxLen;
+
+    */
+
+    // Optimal Approach
+    unordered_set<int> st(nums.begin(), nums.end());
+    int maxLen = 1;
+
+    for (int num : st)
+    {
+
+        // if num - 1 does not exist (iterator to num - 1 go to the end i.e. missing num - 1)
+        if (st.find(num - 1) == st.end())
+        {
+            int curr = num;
+            int len = 1;
+
+            // if next number is found, it runs until chain breaks (iterator goes to end)
+            while (st.find(num + 1) != st.end())
+            {
+                curr++;
+                len++;
+            }
+            maxLen = max(maxLen, len);
+        }
+    }
+}
+
+int longestSubarray(vector<int> &nums, int k)
+{
+    unordered_map<int, int> prefixSum_map;
+    int prefixSum = 0;
+    int maxLen = 0;
+
+    for (int i = 0; i < nums.size(); i++)
+    {
+
+        prefixSum += nums[i];
+
+        // Case 1: subarray that sums to k start from the beginning
+        if (prefixSum == k)
+        {
+            maxLen = max(maxLen, i + 1);
+        }
+
+        // Case 2: check if x - k seen before
+        int rem = prefixSum - k;
+        if (prefixSum_map.find(rem) != prefixSum_map.end())
+        {
+            int len = i - prefixSum_map[rem];
+            maxLen = max(maxLen, len);
+        }
+
+        // Case 3: check if x exists, if not then insert it
+        if (prefixSum_map.find(prefixSum) == prefixSum_map.end())
+        {
+            prefixSum_map[prefixSum] = i;
+        }
+    }
+    return maxLen;
+}
+
+int maxLength(vector<int> &arr)
+{
+
+    /*
+    // Brute Force -> O(n^2)
+    int maxLen = 0;
+    for(int i = 0; i < arr.size(); i++) {
+        int sum = 0;
+        for(int j = i; j < arr.size(); j++) {
+            sum += arr[j];
+            if(sum == 0) {
+                maxLen = max(maxLen, j - i + 1);
+            }
+        }
+    }
+    return maxLen;
+
+    */
+
+    // Optimal Approach - Using Hash maps
+    // T.C = O(n)
+    // S.C = O(n)
+    int prefixSum = 0;
+    int maxLen = 0;
+    unordered_map<int, int> prefixSum_mp;
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        prefixSum += arr[i];
+
+        if (prefixSum == 0)
+        {
+            maxLen = max(maxLen, i + 1);
+        }
+
+        int rem = prefixSum - 0;
+        if (prefixSum_mp.find(rem) != prefixSum_mp.end())
+        {
+            int len = i - prefixSum_mp[rem];
+            maxLen = max(maxLen, len);
+        }
+
+        if (prefixSum_mp.find(prefixSum) == prefixSum_mp.end())
+        {
+            prefixSum_mp[prefixSum] = i;
+        }
+    }
+    return maxLen;
+}
+
+int main()
+{
 
     // Number hashing
     // int n;
@@ -163,7 +311,7 @@ int main() {
     //     char character;
     //     cin>> character;
 
-    //     // fetch frequency 
+    //     // fetch frequency
     //     cout<< hash[character - 'a'] << endl;
     // }
 
@@ -209,6 +357,7 @@ int main() {
     //     cout<< mp[n] << endl;
     // }
 
+    /*
     vector<int> nums = {1, 2, 2, 1, 3};
     vector<vector<int>> ans = countFrequencies(nums);
 
@@ -218,8 +367,10 @@ int main() {
         }
         cout << endl;
     }
+    */
 
-
+    vector<int> nums = {1, 0, 1, 2};
+    cout << "Max consecutive length = " << longestConsecutive(nums) << endl;
 
     return 0;
 }
