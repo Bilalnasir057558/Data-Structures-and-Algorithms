@@ -261,6 +261,64 @@ int maxLength(vector<int> &arr)
     return maxLen;
 }
 
+int subarraysWithXorK(vector<int> &nums, int k) {
+
+    /*
+    // Brute Force
+    int count = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        for(int j = i; j < nums.size(); j++) {
+            int xr = 0;
+            
+            for(int k = i; k <= j; k++) {
+                xr ^= nums[k];
+            }
+
+            if(xr == k) {
+                count++;
+            }
+        }
+    }
+    return count;
+    */
+
+    /*
+    // Better Approach
+    int count = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        int xr = 0;
+        for(int j = i; j < nums.size(); j++) {
+            
+            xr ^= nums[j];
+
+            if(xr == k) {
+                count++;
+            }
+        }
+    }
+    return count;
+    */
+
+    // Optimal
+    unordered_map<int, int> mp;
+    int xr = 0;
+    int count = 0;
+
+    mp[0] = 1;
+    for(int i = 0; i < nums.size(); i++) {
+        xr ^= nums[i];
+
+        int required = xr ^ k;
+        if(mp.find(required) != mp.end()) {
+            count += mp[required];
+        }
+
+        mp[xr]++;
+    }
+    return count;
+}
+
+
 int main()
 {
 
@@ -369,8 +427,10 @@ int main()
     }
     */
 
-    vector<int> nums = {1, 0, 1, 2};
-    cout << "Max consecutive length = " << longestConsecutive(nums) << endl;
+    vector<int> nums = {4, 2, 2, 6, 4};
+    // cout << "Max consecutive length = " << longestConsecutive(nums) << endl;
+
+    cout<< "Number of subarrays with XOR k = " << subarraysWithXorK(nums, 6) << endl;
 
     return 0;
 }
