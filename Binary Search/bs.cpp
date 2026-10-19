@@ -117,6 +117,61 @@ vector<int> getFloorAndCeil(vector<int> nums, int x)
     }
     return {floor, ceil};
 }
+
+int firstOcc(vector<int>& nums, int target) {
+    int n = nums.size();
+    int low = 0;
+    int high = n - 1;
+    int first = -1;
+
+    while(low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if(nums[mid] == target) {
+            first = mid;
+
+            // target can also be in left side
+            high = mid - 1;
+        } else if(nums[mid] < target) {
+            low = mid + 1;
+        } else high = mid - 1;
+    }
+    return first;
+}
+
+int secondOcc(vector<int>& nums, int target) {
+    int n = nums.size();
+    int low = 0;
+    int high = n - 1;
+    int second = -1;
+
+    while(low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if(nums[mid] == target) {
+            second = mid;
+
+            // target can also be in right side
+            low = mid + 1;
+        } else if(nums[mid] < target) {
+            low = mid + 1;
+        } else high = mid - 1;
+    }
+    return second;
+}
+
+vector<int> searchRange(vector<int>& nums, int target) {
+    return {firstOcc(nums, target), secondOcc(nums, target)}; 
+}       
+
 int main()
 {
+    vector<int> nums = {5,7,7,8,8,10};
+    vector<int> ans = searchRange(nums, 8);
+
+    for(auto el : ans) {
+        cout<< el << " ";
+    }
+    cout<< '\n';
+    return 0;
 }
