@@ -118,68 +118,88 @@ vector<int> getFloorAndCeil(vector<int> nums, int x)
     return {floor, ceil};
 }
 
-int firstOcc(vector<int>& nums, int target) {
+int firstOcc(vector<int> &nums, int target)
+{
     int n = nums.size();
     int low = 0;
     int high = n - 1;
     int first = -1;
 
-    while(low <= high) {
+    while (low <= high)
+    {
         int mid = low + (high - low) / 2;
 
-        if(nums[mid] == target) {
+        if (nums[mid] == target)
+        {
             first = mid;
 
             // target can also be in left side
             high = mid - 1;
-        } else if(nums[mid] < target) {
+        }
+        else if (nums[mid] < target)
+        {
             low = mid + 1;
-        } else high = mid - 1;
+        }
+        else
+            high = mid - 1;
     }
     return first;
 }
 
-int secondOcc(vector<int>& nums, int target) {
+int secondOcc(vector<int> &nums, int target)
+{
     int n = nums.size();
     int low = 0;
     int high = n - 1;
     int second = -1;
 
-    while(low <= high) {
+    while (low <= high)
+    {
         int mid = low + (high - low) / 2;
 
-        if(nums[mid] == target) {
+        if (nums[mid] == target)
+        {
             second = mid;
 
             // target can also be in right side
             low = mid + 1;
-        } else if(nums[mid] < target) {
+        }
+        else if (nums[mid] < target)
+        {
             low = mid + 1;
-        } else high = mid - 1;
+        }
+        else
+            high = mid - 1;
     }
     return second;
 }
 
-vector<int> searchRange(vector<int>& nums, int target) {
-    return {firstOcc(nums, target), secondOcc(nums, target)}; 
-}       
+vector<int> searchRange(vector<int> &nums, int target)
+{
+    return {firstOcc(nums, target), secondOcc(nums, target)};
+}
 
-int peakIndexInMountainArray(vector<int>& arr)  {
+int peakIndexInMountainArray(vector<int> &arr)
+{
     int n = arr.size();
     int low = 0;
     int high = n - 1;
 
     // loop until low >= high (only one element is remaining i.e. peak element so no need to iterate further)
-    while(low < high) {
+    while (low < high)
+    {
         int mid = low + (high - low) / 2;
 
         // Case 1: mid element lies in the left increasing part b/c it is smaller than its next element
         // Move low to mid + 1
-        if(arr[mid] < arr[mid + 1]) {
+        if (arr[mid] < arr[mid + 1])
+        {
             low = mid + 1;
 
-        // Case 2: mid element is probably peak element b/c it is greater than its next element, but peak element can also be found on left of mid
-        } else {
+            // Case 2: mid element is probably peak element b/c it is greater than its next element, but peak element can also be found on left of mid
+        }
+        else
+        {
             high = mid;
         }
     }
@@ -187,19 +207,24 @@ int peakIndexInMountainArray(vector<int>& arr)  {
     return low;
 }
 
-int pivotIdx(vector<int>& nums) {
+int pivotIdx(vector<int> &nums)
+{
     int n = nums.size();
     int low = 0, high = n - 1;
 
-    while(low < high) {
+    while (low < high)
+    {
         int mid = low + (high - low) / 2;
 
         // if mid element is greater than the first element means it is in the first sorted array
-        if(nums[mid] >= nums[0]) {
+        if (nums[mid] >= nums[0])
+        {
             low = mid + 1;
 
-        // if mid element might be the pivot, but it can also be found somewhere on left
-        } else {
+            // if mid element might be the pivot, but it can also be found somewhere on left
+        }
+        else
+        {
             high = mid;
         }
     }
@@ -207,33 +232,82 @@ int pivotIdx(vector<int>& nums) {
     return low;
 }
 
-int searchInSortedRotatedArray(vector<int>& nums, int target) {
+int searchInSortedRotatedArray(vector<int> &nums, int target)
+{
     int n = nums.size();
     int pivot = pivotIdx(nums);
 
     int low, high;
 
     // Binary Search on right sorted Array b/c target is b/w pivot and high (inclusive)
-    if(nums[pivot] <= target && target <= nums[n - 1]) {
+    if (nums[pivot] <= target && target <= nums[n - 1])
+    {
         low = pivot;
         high = n - 1;
-    
-    // Binary search on left side
-    } else {
+
+        // Binary search on left side
+    }
+    else
+    {
         low = 0;
         high = pivot - 1;
     }
 
-    while(low <= high) {
-            int mid = low + (high - low) / 2;
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
 
-            if(nums[mid] == target) return mid;
+        if (nums[mid] == target)
+            return mid;
 
-            if(nums[mid] > target) high = mid - 1;
-            else low = mid + 1;
-        }
+        if (nums[mid] > target)
+            high = mid - 1;
+        else
+            low = mid + 1;
+    }
 
     return -1;
+}
+
+bool searchInSortedRotatedArrayII(vector<int> &nums, int target)
+{
+    int low = 0;
+    int high = nums.size() - 1;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        // Case 1: mid is the target
+        if (nums[mid] == target)
+            return true;
+
+        // Case 2: Sorted part can't be find due to duplicates
+        if (nums[mid] == nums[low] && nums[mid] == nums[high])
+        {
+            low++;
+            high--;
+        }
+
+        // Case 3: left part is sorted
+        else if (nums[mid] >= nums[low])
+        {
+            if (nums[low] <= target && target < nums[mid])
+                high = mid - 1;
+            else
+                low = mid + 1;
+        }
+
+        // Case 4: Right part is sorted
+        else
+        {
+            if (nums[mid] < target && target <= nums[high])
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+    }
+    return false;
 }
 
 int main()
