@@ -310,9 +310,143 @@ bool searchInSortedRotatedArrayII(vector<int> &nums, int target)
     return false;
 }
 
+int findMin(vector<int> &nums)
+{
+    int n = nums.size();
+    int low = 0, high = n - 1;
+    int ans = INT_MAX;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        // Optimization: If array is already sorted, min is the nums[low] element
+        if (nums[low] <= nums[high])
+        {
+            ans = min(ans, nums[low]);
+            break;
+        }
+
+        // If left half is sorted
+        if (nums[mid] >= nums[low])
+        {
+            ans = min(ans, nums[low]);
+            low = mid + 1;
+
+            // right half is sorted
+        }
+        else
+        {
+            ans = min(ans, nums[mid]);
+            high = mid - 1;
+        }
+    }
+    return ans;
+}
+
+int findKRotation(vector<int> &nums)
+{
+    int n = nums.size();
+    int low = 0;
+    int high = n - 1;
+    int answer = INT_MAX;
+    int index = -1;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        if (nums[low] <= nums[high])
+        {
+            if (nums[low] < answer)
+            {
+                answer = nums[low];
+                index = low;
+            }
+        }
+
+        if (nums[mid] >= nums[low])
+        {
+            if (nums[low] < answer)
+            {
+                answer = nums[low];
+                index = low;
+            }
+            low = mid + 1;
+        }
+        else
+        {
+            if (nums[mid] < answer)
+            {
+                answer = nums[mid];
+                index = mid;
+            }
+            high = mid - 1;
+        }
+    }
+    return index;
+}
+
+int singleNonDuplicate(vector<int> &nums)
+{
+    int low = 0;
+    int high = nums.size() - 1;
+
+    while (low < high)
+    {
+        int mid = low + (high - low) / 2;
+
+        // if mid is odd
+        if (mid % 2 == 1)
+            mid--;
+
+        // if pair is correct, go the right side
+        if (nums[mid] == nums[mid + 1])
+        {
+            low = mid + 2;
+
+            // if pair is broken, single is mid or to its left
+        }
+        else
+        {
+            high = mid;
+        }
+    }
+    return nums[low];
+}
+
+int countOccurrences(vector<int>& arr, int target)  {
+    int lower = lowerBound(arr, target);
+
+    int upper = upperBound(arr, target);
+
+    // if target is absent, their is nothing to count
+    if(lower == arr.size() || arr[lower] != target) {
+        return 0;
+    }
+    return upper - lower;
+}
+
+int floorSqrt(int n)  {
+      long long low = 0;
+      long long high = n;
+      long long ans = 0;
+
+      while(low <= high) {
+        long long mid = low + (high - low) / 2;
+
+        if(mid * mid == n) return mid;
+        else if(mid * mid < n) {
+            ans = mid;
+            low = mid + 1;
+        } else high = mid - 1;
+      }
+      return ans;
+    }
+
 int main()
 {
-    vector<int> nums = {1, 3};
+    vector<int> nums = {1, 2, 4, 4, 4, 6, 8};
     // vector<int> ans = searchRange(nums, 8);
 
     // for(auto el : ans) {
@@ -322,6 +456,10 @@ int main()
 
     // cout<< "Peak Element Idx = " << peakIndexInMountainArray(nums) << endl;
 
-    cout << "Idx of target in sorted rotated array = " << searchInSortedRotatedArray(nums, 1) << endl;
+    // cout << "Idx of target in sorted rotated array = " << searchInSortedRotatedArray(nums, 1) << endl;
+
+    // cout << "Minimum in a Rotated Array = " << findMin(nums) << endl;
+
+    cout<< "Total Occurrences = " << countOccurrences(nums, 4) << endl;
     return 0;
 }
