@@ -444,9 +444,64 @@ int floorSqrt(int n)  {
       return ans;
     }
 
+int comparePower(int mid, int M, int N) {
+    long long ans = 1;
+
+    for(int i = 1; i <= N; i++) {
+
+        // check overflow before calculating power
+        if(ans > M / mid) { // mid^N > M
+            return 1;
+        }
+
+        ans *= mid;
+    }
+
+    if(ans == M) return 0; // mid^N = M
+    return -1;
+}
+
+int nthRoot(int M, int N) {
+    int low = 1; 
+    int high = M;
+
+    while(low <= high) {
+        int mid = low + (high - low) / 2;
+
+        int result = comparePower(mid, M, N);
+
+        if(result == 0) return mid;
+        else if(result == 1) high = mid - 1;
+        else low = mid + 1;
+    }
+
+    return -1;
+}
+
+int smallestDivisor(vector<int>& nums, int threshold) {
+
+    int low = 1;
+    int high = *max_element(nums.begin(), nums.end());
+    int ans = high;
+
+    while(low <= high) {
+        int mid = low + (high - low) / 2;
+
+        int sum = 0;
+        for(auto& num : nums) {
+            sum += ((num + mid - 1) / mid);
+        }
+        if(sum <= threshold) {
+            ans = mid;
+            high = mid - 1;
+        } else low = mid + 1;
+    }
+    return ans;
+}
+
 int main()
 {
-    vector<int> nums = {1, 2, 4, 4, 4, 6, 8};
+    vector<int> nums = {1, 2, 5, 9};
     // vector<int> ans = searchRange(nums, 8);
 
     // for(auto el : ans) {
@@ -460,6 +515,10 @@ int main()
 
     // cout << "Minimum in a Rotated Array = " << findMin(nums) << endl;
 
-    cout<< "Total Occurrences = " << countOccurrences(nums, 4) << endl;
+    // cout<< "Total Occurrences = " << countOccurrences(nums, 4) << endl;
+
+    // cout<< "Nth Root = " << nthRoot(27,5) << endl;
+
+    cout << "Smallest Divisor = " << smallestDivisor(nums, 7) << endl;
     return 0;
 }
