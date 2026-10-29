@@ -415,93 +415,219 @@ int singleNonDuplicate(vector<int> &nums)
     return nums[low];
 }
 
-int countOccurrences(vector<int>& arr, int target)  {
+int countOccurrences(vector<int> &arr, int target)
+{
     int lower = lowerBound(arr, target);
 
     int upper = upperBound(arr, target);
 
     // if target is absent, their is nothing to count
-    if(lower == arr.size() || arr[lower] != target) {
+    if (lower == arr.size() || arr[lower] != target)
+    {
         return 0;
     }
     return upper - lower;
 }
 
-int floorSqrt(int n)  {
-      long long low = 0;
-      long long high = n;
-      long long ans = 0;
+int floorSqrt(int n)
+{
+    long long low = 0;
+    long long high = n;
+    long long ans = 0;
 
-      while(low <= high) {
+    while (low <= high)
+    {
         long long mid = low + (high - low) / 2;
 
-        if(mid * mid == n) return mid;
-        else if(mid * mid < n) {
+        if (mid * mid == n)
+            return mid;
+        else if (mid * mid < n)
+        {
             ans = mid;
             low = mid + 1;
-        } else high = mid - 1;
-      }
-      return ans;
+        }
+        else
+            high = mid - 1;
     }
+    return ans;
+}
 
-int comparePower(int mid, int M, int N) {
+int comparePower(int mid, int M, int N)
+{
     long long ans = 1;
 
-    for(int i = 1; i <= N; i++) {
+    for (int i = 1; i <= N; i++)
+    {
 
         // check overflow before calculating power
-        if(ans > M / mid) { // mid^N > M
+        if (ans > M / mid)
+        { // mid^N > M
             return 1;
         }
 
         ans *= mid;
     }
 
-    if(ans == M) return 0; // mid^N = M
+    if (ans == M)
+        return 0; // mid^N = M
     return -1;
 }
 
-int nthRoot(int M, int N) {
-    int low = 1; 
+int nthRoot(int M, int N)
+{
+    int low = 1;
     int high = M;
 
-    while(low <= high) {
+    while (low <= high)
+    {
         int mid = low + (high - low) / 2;
 
         int result = comparePower(mid, M, N);
 
-        if(result == 0) return mid;
-        else if(result == 1) high = mid - 1;
-        else low = mid + 1;
+        if (result == 0)
+            return mid;
+        else if (result == 1)
+            high = mid - 1;
+        else
+            low = mid + 1;
     }
 
     return -1;
 }
 
-int smallestDivisor(vector<int>& nums, int threshold) {
+int smallestDivisor(vector<int> &nums, int threshold)
+{
 
     int low = 1;
     int high = *max_element(nums.begin(), nums.end());
     int ans = high;
 
-    while(low <= high) {
+    while (low <= high)
+    {
         int mid = low + (high - low) / 2;
 
         int sum = 0;
-        for(auto& num : nums) {
+        for (auto &num : nums)
+        {
             sum += ((num + mid - 1) / mid);
         }
-        if(sum <= threshold) {
+        if (sum <= threshold)
+        {
             ans = mid;
             high = mid - 1;
-        } else low = mid + 1;
+        }
+        else
+            low = mid + 1;
     }
     return ans;
 }
 
+int minEatingSpeed(vector<int> &piles, int h)
+{
+    int low = 1;
+    int high = *max_element(piles.begin(), piles.end());
+    int ans = high;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        long long sum = 0;
+        for (auto &banana : piles)
+        {
+            sum += (banana + (long long)mid - 1) / mid;
+        }
+
+        if (sum <= h)
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+bool canMake(vector<int> &bloomDay, int day, int m, int k)
+{
+    int count = 0;
+    int bouquets = 0;
+
+    for (auto &bloom : bloomDay)
+    {
+        if (bloom <= day)
+        {
+            count++;
+
+            if (count == k)
+            {
+                bouquets++;
+                count = 0;
+            }
+        }
+        else
+        {
+            count = 0;
+        }
+    }
+
+    // if m or more bouquets are made on a particular, return true
+    return bouquets >= m;
+}
+
+int minDays(vector<int> &bloomDay, int m, int k)
+{
+    /*
+
+    // Brute Force
+    int n = bloomDay.size();
+
+    if (1LL * m * k > n)
+        return -1;
+
+    int low = *min_element(bloomDay.begin(), bloomDay.end());
+    int high = *max_element(bloomDay.begin(), bloomDay.end());
+
+    for (int day = low; day <= high; day++)
+    {
+        if (canMake(bloomDay, day, m, k))
+        {
+            return day;
+        }
+    }
+    return -1;
+    */
+
+    // Optimal
+    int n = bloomDay.size();
+
+    if (1LL * m * k > n)
+        return -1;
+
+    int low = *min_element(bloomDay.begin(), bloomDay.end());
+    int high = *max_element(bloomDay.begin(), bloomDay.end());
+
+    int ans = -1;
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        if (canMake(bloomDay, mid, m, k))
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+
 int main()
 {
-    vector<int> nums = {1, 2, 5, 9};
+    vector<int> nums = {1, 10, 3, 10, 2};
     // vector<int> ans = searchRange(nums, 8);
 
     // for(auto el : ans) {
@@ -519,6 +645,8 @@ int main()
 
     // cout<< "Nth Root = " << nthRoot(27,5) << endl;
 
-    cout << "Smallest Divisor = " << smallestDivisor(nums, 7) << endl;
+    // cout << "Smallest Divisor = " << smallestDivisor(nums, 7) << endl;
+
+    cout << "Minimum days to make M bouquets = " << minDays(nums, 3, 1) << endl;
     return 0;
 }
