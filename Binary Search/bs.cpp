@@ -624,10 +624,179 @@ int minDays(vector<int> &bloomDay, int m, int k)
     return ans;
 }
 
+int daysRequired(vector<int> &weights, int capacity)
+{
+
+    int load = 0;
+    int days = 1;
+
+    for (int weight : weights)
+    {
+        if (load + weight <= capacity)
+        {
+            load += weight;
+        }
+        else
+        {
+            days++;
+            load = weight;
+        }
+    }
+    return days;
+}
+
+int shipWithinDays(vector<int> &weights, int days)
+{
+
+    /*
+    // Brute Force
+    int low = *max_element(weights.begin(), weights.end());
+    int high = accumulate(weights.begin(), weights.end(), 0);
+
+    for(int capacity = low; capacity <= high; capacity++) {
+        if(daysRequired(weights, capacity) <= days) {
+            return capacity;
+        }
+    }
+    return -1;
+    */
+
+    // Optimal - BS On Answers
+    int low = *max_element(weights.begin(), weights.end());
+    int high = accumulate(weights.begin(), weights.end(), 0);
+    int ans = -1;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        if (daysRequired(weights, mid) <= days)
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+int findKthPositive(vector<int> &arr, int k)
+{
+
+    /*
+    // Brute Force
+    for(int num : arr) {
+        if(num <= k) {
+            k++;
+        } else break;
+    }
+
+    return k;
+
+    */
+
+    // Binary Search Appraoch
+    int low = 0;
+    int high = arr.size() - 1;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        int missing = arr[mid] - (mid + 1);
+
+        // did'nt reach kth missing , move right
+        if (missing < k)
+        {
+            low = mid + 1;
+
+            // reached or crossed kth missing, move left
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+
+    return low + k;
+}
+
+bool isValid(vector<int> &nums, int k, int maxAllowedSum)
+{
+    int subArrays = 1;
+    int sum = 0;
+
+    for (int num : nums)
+    {
+
+        // edge case: if element is greater than maxAllowed sum
+        if (num > maxAllowedSum)
+            return false;
+
+        if (sum + num <= maxAllowedSum)
+        {
+            sum += num;
+        }
+        else
+        {
+            subArrays++;
+            sum = num; // without edge case, it may stores the element greater than the allowed sum and gives wrong ans
+        }
+    }
+    return subArrays <= k;
+}
+
+int splitArray(vector<int> &nums, int k)
+{
+    int low = 0;
+    int high = accumulate(nums.begin(), nums.end(), 0);
+    int ans = -1;
+
+    while (low <= high)
+    {
+
+        // max. allowed sum per sub array
+        int mid = low + (high - low) / 2;
+
+        if (isValid(nums, k, mid))
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+
+// Painter's Partition
+int minTime(vector<int> &arr, int k)
+{
+    int low = *min_element(arr.begin(), arr.end());
+    int high = accumulate(arr.begin(), arr.end(), 0);
+    int ans = -1;
+
+    while (low <= high)
+    {
+
+        int mid = low + (high - low) / 2;
+
+        if (isValid(arr, k, mid))
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
 
 int main()
 {
-    vector<int> nums = {1, 10, 3, 10, 2};
+    vector<int> nums = {2, 3, 4, 7, 11};
     // vector<int> ans = searchRange(nums, 8);
 
     // for(auto el : ans) {
@@ -647,6 +816,10 @@ int main()
 
     // cout << "Smallest Divisor = " << smallestDivisor(nums, 7) << endl;
 
-    cout << "Minimum days to make M bouquets = " << minDays(nums, 3, 1) << endl;
+    // cout << "Minimum days to make M bouquets = " << minDays(nums, 3, 1) << endl;
+
+    // cout<< "Least weight capacity of the ship = " << shipWithinDays(nums, 3) << endl;
+
+    cout << "Kth Missing Integer = " << findKthPositive(nums, 5) << endl;
     return 0;
 }
