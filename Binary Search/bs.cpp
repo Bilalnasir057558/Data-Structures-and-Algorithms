@@ -770,7 +770,6 @@ int splitArray(vector<int> &nums, int k)
     return ans;
 }
 
-
 // Painter's Partition
 int minTime(vector<int> &arr, int k)
 {
@@ -794,9 +793,90 @@ int minTime(vector<int> &arr, int k)
     return ans;
 }
 
+bool isPossible(vector<int> &stalls, int k, int minDistance)
+{
+    int cows = 1;
+    int CowPos = stalls[0];
+
+    for (int i = 1; i < stalls.size(); i++)
+    {
+        if (stalls[i] - CowPos >= minDistance)
+        {
+            cows++;
+            CowPos = stalls[i];
+        }
+
+        if (cows == k)
+            return true;
+    }
+    return false;
+}
+
+// Aggressive Cows
+int largestMinimumDistance(vector<int> &stalls, int k)
+{
+    sort(stalls.begin(), stalls.end());
+    int low = 0;
+    int high = stalls.back() - stalls.front();
+    int ans = -1;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        if (isPossible(stalls, k, mid))
+        {
+            ans = mid;
+            low = mid + 1;
+        }
+        else
+            high = mid - 1;
+    }
+
+    return ans;
+}
+
+int findPeakElement(vector<int> &nums)
+{
+    int n = nums.size();
+    if (n == 1)
+        return 0;
+
+    // check if first and last element are peak
+    if (nums[0] > nums[1])
+        return 0;
+    if (nums[n - 1] > nums[n - 2])
+        return n - 1;
+
+    // Search space is from 1 to n - 2 b/c 1st and last are already checked
+    int low = 1;
+    int high = n - 2;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        if (nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1])
+            return mid;
+
+        // If we are on an uphill slope going right, a peak lies to the right
+        if (nums[mid] < nums[mid + 1])
+        {
+            low = mid + 1;
+
+            // If we are on a downhill slope going right, a peak lies to the left
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
+
 int main()
 {
-    vector<int> nums = {2, 3, 4, 7, 11};
+    vector<int> nums = {4, 2, 1, 3, 6};
     // vector<int> ans = searchRange(nums, 8);
 
     // for(auto el : ans) {
@@ -820,6 +900,8 @@ int main()
 
     // cout<< "Least weight capacity of the ship = " << shipWithinDays(nums, 3) << endl;
 
-    cout << "Kth Missing Integer = " << findKthPositive(nums, 5) << endl;
+    // cout << "Kth Missing Integer = " << findKthPositive(nums, 5) << endl;
+
+    cout << "Largest minimum distance = " << largestMinimumDistance(nums, 2) << endl;
     return 0;
 }
