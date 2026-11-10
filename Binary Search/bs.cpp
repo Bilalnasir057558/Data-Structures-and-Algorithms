@@ -874,6 +874,102 @@ int findPeakElement(vector<int> &nums)
     return -1;
 }
 
+double findMedianSortedArrays(vector<int> &nums1,
+                              vector<int> &nums2)
+{
+    int n1 = nums1.size();
+    int n2 = nums2.size();
+
+    // Always binary-search the smaller array
+    if (n1 > n2)
+    {
+        return findMedianSortedArrays(nums2, nums1);
+    }
+
+    int leftSize = (n1 + n2 + 1) / 2;
+
+    int low = 0;
+    int high = n1;
+
+    while (low <= high)
+    {
+        // Number of elements taken from nums1
+        int left1 = low + (high - low) / 2;
+
+        // Remaining elements come from nums2
+        int left2 = leftSize - left1;
+
+        int l1 = (left1 > 0) ? nums1[left1 - 1] : INT_MIN;
+        int l2 = (left2 > 0) ? nums2[left2 - 1] : INT_MIN;
+
+        int r1 = (left1 < n1) ? nums1[left1] : INT_MAX;
+        int r2 = (left2 < n2) ? nums2[left2] : INT_MAX;
+
+        // Correct partition
+        if (l1 <= r2 && l2 <= r1)
+        {
+            if ((n1 + n2) % 2 == 1)
+            {
+                return max(l1, l2);
+            }
+
+            return ((double)max(l1, l2) +
+                    min(r1, r2)) /
+                   2.0;
+        }
+
+        // Too many elements taken from nums1
+        else if (l1 > r2)
+        {
+            high = left1 - 1;
+        }
+
+        // Too few elements taken from nums1
+        else
+        {
+            low = left1 + 1;
+        }
+    }
+
+    return 0.0; // Unreachable for valid sorted inputs
+}
+
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
+    /*
+    // Brute
+    for (auto& row : matrix) {
+        for(int num : row) {
+            if(num == target) {
+                return true;
+            }
+        }
+    }
+    return false;
+    */
+
+    // Approach 2 - O(m + logn)
+    
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    int low = 0; 
+    int high = n - 1;
+
+    for(int i = 0; i < m; i++) {
+        if(matrix[i][0] <= target && target <= matrix[i][n - 1]) {
+            while(low <= high) {
+                int mid = low + (high - low) / 2;
+
+                if(matrix[i][mid] == target) return true;
+
+                else if(matrix[i][mid] < target) high = mid - 1;
+                else low = mid + 1;
+            }
+        }
+    }
+    return false;
+}
+
 int main()
 {
     vector<int> nums = {4, 2, 1, 3, 6};
@@ -902,6 +998,11 @@ int main()
 
     // cout << "Kth Missing Integer = " << findKthPositive(nums, 5) << endl;
 
-    cout << "Largest minimum distance = " << largestMinimumDistance(nums, 2) << endl;
+    // cout << "Largest minimum distance = " << largestMinimumDistance(nums, 2) << endl;
+
+    vector<vector<int>> matrix = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
+    if(searchMatrix(matrix, 16)) {
+        cout<< "Found!" << endl;
+    } else cout<< "Not found!" << endl;
     return 0;
 }
