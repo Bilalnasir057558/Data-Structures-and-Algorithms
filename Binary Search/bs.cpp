@@ -947,6 +947,8 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
     return false;
     */
 
+    /*
+
     // Approach 2 - O(m + logn)
     
     int m = matrix.size();
@@ -962,13 +964,60 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
 
                 if(matrix[i][mid] == target) return true;
 
-                else if(matrix[i][mid] < target) high = mid - 1;
-                else low = mid + 1;
+                else if(matrix[i][mid] < target) low = mid + 1;
+                else high = mid - 1;
             }
         }
     }
     return false;
+
+    */
+
+    // Optimal - O(log m * n)
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    int low = 0;
+    int high = m * n - 1;
+
+    while(low <= high) {
+        int mid = low + (high - low) / 2;
+
+        int row = mid / n;
+        int col = mid % n;
+
+        if(matrix[row][col] == target) {
+            return true;
+        }
+        else if(matrix[row][col] < target) low = mid + 1;
+        else high = mid - 1;
+    }
+    return false;
 }
+
+bool searchMatrixII(vector<vector<int>>& matrix, int target) {
+        int m = matrix.size();
+        if (m == 0) return false;
+
+        int n = matrix[0].size();
+
+        int row = 0;
+        int col = n - 1;
+
+        while (row < m && col >= 0) {
+            if (matrix[row][col] == target) {
+                return true;
+            }
+            else if (matrix[row][col] > target) {
+                col--;
+            }
+            else {
+                row++;
+            }
+        }
+
+        return false;
+    }
 
 int main()
 {
