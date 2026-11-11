@@ -934,7 +934,8 @@ double findMedianSortedArrays(vector<int> &nums1,
     return 0.0; // Unreachable for valid sorted inputs
 }
 
-bool searchMatrix(vector<vector<int>>& matrix, int target) {
+bool searchMatrix(vector<vector<int>> &matrix, int target)
+{
     /*
     // Brute
     for (auto& row : matrix) {
@@ -950,11 +951,11 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
     /*
 
     // Approach 2 - O(m + logn)
-    
+
     int m = matrix.size();
     int n = matrix[0].size();
 
-    int low = 0; 
+    int low = 0;
     int high = n - 1;
 
     for(int i = 0; i < m; i++) {
@@ -980,45 +981,141 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
     int low = 0;
     int high = m * n - 1;
 
-    while(low <= high) {
+    while (low <= high)
+    {
         int mid = low + (high - low) / 2;
 
         int row = mid / n;
         int col = mid % n;
 
-        if(matrix[row][col] == target) {
+        if (matrix[row][col] == target)
+        {
             return true;
         }
-        else if(matrix[row][col] < target) low = mid + 1;
-        else high = mid - 1;
+        else if (matrix[row][col] < target)
+            low = mid + 1;
+        else
+            high = mid - 1;
     }
     return false;
 }
 
-bool searchMatrixII(vector<vector<int>>& matrix, int target) {
-        int m = matrix.size();
-        if (m == 0) return false;
+bool searchMatrixII(vector<vector<int>> &matrix, int target)
+{
+    int m = matrix.size();
+    if (m == 0)
+        return false;
 
-        int n = matrix[0].size();
+    int n = matrix[0].size();
 
-        int row = 0;
-        int col = n - 1;
+    int row = 0;
+    int col = n - 1;
 
-        while (row < m && col >= 0) {
-            if (matrix[row][col] == target) {
-                return true;
+    while (row < m && col >= 0)
+    {
+        if (matrix[row][col] == target)
+        {
+            return true;
+        }
+        else if (matrix[row][col] > target)
+        {
+            col--;
+        }
+        else
+        {
+            row++;
+        }
+    }
+
+    return false;
+}
+
+bool isValidSmallest(vector<vector<int>> &matrix, int k, int possibleSmallest)
+{
+    int count = 0;
+
+    int row = matrix.size() - 1;
+    int col = 0;
+
+    while (row >= 0 && col < matrix.size())
+    {
+        if (matrix[row][col] <= possibleSmallest)
+        {
+            count += row + 1;
+            col++;
+        }
+        else
+            row--;
+    }
+
+    return count >= k;
+}
+int kthSmallest(vector<vector<int>> &matrix, int k)
+{
+    int n = matrix.size();
+    int low = matrix[0][0];
+    int high = matrix[n - 1][n - 1];
+    int ans = 0;
+
+    while (low <= high)
+    {
+        int mid = low + (high - mid) / 2;
+
+        if (isValidSmallest(matrix, k, mid))
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+int rowWithMax1s(vector<vector<int>> &mat)
+{
+    int m = mat.size();
+    int n = mat[0].size();
+    int ans = -1;
+    int maxOnes = 0;
+
+    for (int i = 0; i < m; i++)
+    {
+        int low = 0;
+        int high = n - 1;
+        int onesCount = 0;
+        int firstOneIdx = -1;
+
+        while (low <= high)
+        {
+            int mid = low + (high - low) / 2;
+
+            // if mid is 1, save it and search left to find the first 1
+            if (mat[i][mid] == 1)
+            {
+                firstOneIdx = mid;
+                high = mid - 1;
             }
-            else if (matrix[row][col] > target) {
-                col--;
-            }
-            else {
-                row++;
+            else
+            {
+                low = mid + 1;
             }
         }
 
-        return false;
+        if (firstOneIdx != -1)
+        {
+            onesCount += n - firstOneIdx;
+
+            if (onesCount > maxOnes)
+            {
+                maxOnes = onesCount;
+                ans = i;
+            }
+        }
     }
 
+    return ans;
+}
 int main()
 {
     vector<int> nums = {4, 2, 1, 3, 6};
@@ -1049,9 +1146,12 @@ int main()
 
     // cout << "Largest minimum distance = " << largestMinimumDistance(nums, 2) << endl;
 
-    vector<vector<int>> matrix = {{1,3,5,7},{10,11,16,20},{23,30,34,60}};
-    if(searchMatrix(matrix, 16)) {
-        cout<< "Found!" << endl;
-    } else cout<< "Not found!" << endl;
+    vector<vector<int>> matrix = {{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}};
+    if (searchMatrix(matrix, 16))
+    {
+        cout << "Found!" << endl;
+    }
+    else
+        cout << "Not found!" << endl;
     return 0;
 }
