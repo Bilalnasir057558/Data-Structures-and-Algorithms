@@ -1116,6 +1116,101 @@ int rowWithMax1s(vector<vector<int>> &mat)
 
     return ans;
 }
+
+int minimumSize(vector<int> &nums, int maxOperations)
+{
+    int low = 1;
+    int high = *max_element(nums.begin(), nums.end());
+    int ans = 0;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        long long operations = 0;
+        for (int num : nums)
+        {
+            operations += (num - 1) / mid;
+        };
+
+        if (operations <= maxOperations)
+        {
+            ans = mid;
+            high = mid - 1;
+        }
+        else
+            low = mid + 1;
+    }
+    return ans;
+}
+
+int findMinInSortedRotatedII(vector<int> &nums)
+{
+    int low = 0;
+    int high = nums.size() - 1;
+
+    while (low < high)
+    {
+        int mid = low + (high - low) / 2;
+
+        // if mid is strictly less than right, mid to right is strictly sorted, pivot (drop point i.e. where rotation occurs) must be in left including mid
+        if (nums[mid] < nums[high])
+        {
+            high = mid;
+
+            // if mid is greater than high, drop point must be on the right side
+        }
+        else if (nums[mid] > nums[high])
+        {
+            low = mid + 1;
+        }
+
+        // mid is equal to high, means we can't predict where the drop point should be, so we reduce the search space by moving high backward b/c one instance of it (mid) is already in array
+        else
+        {
+            high--;
+        }
+    }
+    return nums[low];
+}
+
+int findPeakElementII(vector<int> &nums)
+{
+    int n = nums.size();
+    if (n == 1)
+        return 0;
+
+    // check if first and last element are peak
+    if (nums[0] > nums[1])
+        return 0;
+    if (nums[n - 1] > nums[n - 2])
+        return n - 1;
+
+    // Search space is from 1 to n - 2 b/c 1st and last are already checked
+    int low = 1;
+    int high = n - 2;
+
+    while (low <= high)
+    {
+        int mid = low + (high - low) / 2;
+
+        if (nums[mid] > nums[mid - 1] && nums[mid] > nums[mid + 1])
+            return mid;
+
+        // If we are on an uphill slope going right, a peak lies to the right
+        if (nums[mid] < nums[mid + 1])
+        {
+            low = mid + 1;
+
+            // If we are on a downhill slope going right, a peak lies to the left
+        }
+        else
+        {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
 int main()
 {
     vector<int> nums = {4, 2, 1, 3, 6};
